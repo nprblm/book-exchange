@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_profile"
+        android:name="ua.nprblm.bookexchange.UI.profile.ProfileFragment"
+        android:label="Profile"
+        tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/navigation_add"
+        android:name="ua.nprblm.bookexchange.UI.add.AddFragment"
+        android:label="Add"
+        tools:layout="@layout/fragment_add" />
+    <fragment
+        android:id="@+id/navigation_like"
+        android:name="ua.nprblm.bookexchange.UI.like.LikeFragment"
+        android:label="Like"
+        tools:layout="@layout/fragment_like" />
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="ua.nprblm.bookexchange.UI.home.HomeFragment"
+        android:label="Home"
+        tools:layout="@layout/fragment_home" />
+
+</navigation>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/vital/AndroidStudioProjects/BookExchange/app/src/main/res/drawable-v24/button_orange.xml" value="0.3796875" />
+        <entry key="..\:/Users/vital/AndroidStudioProjects/BookExchange/app/src/main/res/drawable-v24/button_yellow.xml" value="0.3796875" />
+        <entry key="..\:/Users/vital/AndroidStudioProjects/BookExchange/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.67" />
+        <entry key="..\:/Users/vital/AndroidStudioProjects/BookExchange/app/src/main/res/drawable/bottom_navigation_selector.xml" value="0.3796875" />
+        <entry key="..\:/Users/vital/AndroidStudioProjects/BookExchange/app/src/main/res/drawable/button.xml" value="0.3796875" />
+        <entry key="..\:/Users/vital/AndroidStudioProjects/BookExchange/app/src/main/res/drawable/button_green.xml" value="0.3796875" />
+        <entry key="..\:/Users/vital/AndroidStudioProjects/BookExchange/app/src/main/res/drawable/fade.xml" value="0.23980263157894738" />
+        <entry key="..\:/Users/vital/AndroidStudioProjects/BookExchange/app/src/main/res/drawable/ic_dashboard_black_24dp.xml" value="0.3796875" />
+        <entry key="..\:/Users/vital/AndroidStudioProjects/BookExchange/app/src/main/res/drawable/ic_home_black_24dp.xml" value="0.3796875" />
+        <entry key="..\:/Users/vital/AndroidStudioProjects/BookExchange/app/src/main/res/drawable/ic_launcher_background.xml" value="0.3796875" />
+        <entry key="..\:/Users/vital/AndroidStudioProjects/BookExchange/app/src/main/res/drawable/ic_notifications_black_24dp.xml" value="0.3796875" />
+        <entry key="..\:/Users/vital/AndroidStudioProjects/BookExchange/app/src/main/res/drawable/input_borders.xml" value="0.3796875" />
+        <entry key="..\:/Users/vital/AndroidStudioProjects/BookExchange/app/src/main/res/font/cooper.xml" value="0.23333333333333334" />
+        <entry key="..\:/Users/vital/AndroidStudioProjects/BookExchange/app/src/main/res/font/open_sans.xml" value="0.39375" />
+        <entry key="..\:/Users/vital/AndroidStudioProjects/BookExchange/app/src/main/res/layout/activity_home.xml" value="0.36354166666666665" />
+        <entry key="..\:/Users/vital/AndroidStudioProjects/BookExchange/app/src/main/res/layout/activity_item.xml" value="0.22960526315789473" />
+        <entry key="..\:/Users/vital/AndroidStudioProjects/BookExchange/app/src/main/res/layout/activity_main.xml" value="0.33" />
+        <entry key="..\:/Users/vital/AndroidStudioProjects/BookExchange/app/src/main/res/layout/activity_register.xml" value="0.36354166666666665" />
+        <entry key="..\:/Users/vital/AndroidStudioProjects/BookExchange/app/src/main/res/layout/activity_settings.xml" value="0.2703125" />
+        <entry key="..\:/Users/vital/AndroidStudioProjects/BookExchange/app/src/main/res/layout/fragment_add.xml" value="0.18" />
+        <entry key="..\:/Users/vital/AndroidStudioProjects/BookExchange/app/src/main/res/layout/fragment_dashboard.xml" value="0.36354166666666665" />
+        <entry key="..\:/Users/vital/AndroidStudioProjects/BookExchange/app/src/main/res/layout/fragment_home.xml" value="0.2" />
+        <entry key="..\:/Users/vital/AndroidStudioProjects/BookExchange/app/src/main/res/layout/fragment_item.xml" value="0.22" />
+        <entry key="..\:/Users/vital/AndroidStudioProjects/BookExchange/app/src/main/res/layout/fragment_like.xml" value="0.36354166666666665" />
+        <entry key="..\:/Users/vital/AndroidStudioProjects/BookExchange/app/src/main/res/layout/fragment_notifications.xml" value="0.36354166666666665" />
+        <entry key="..\:/Users/vital/AndroidStudioProjects/BookExchange/app/src/main/res/layout/fragment_profile.xml" value="0.25" />
+        <entry key="..\:/Users/vital/AndroidStudioProjects/BookExchange/app/src/main/res/layout/fragment_profile_settings.xml" value="0.22" />
+        <entry key="..\:/Users/vital/AndroidStudioProjects/BookExchange/app/src/main/res/layout/product_item_layout.xml" value="0.33" />
+        <entry key="..\:/Users/vital/AndroidStudioProjects/BookExchange/app/src/main/res/menu/bottom_nav_menu.xml" value="0.36354166666666665" />
+        <entry key="..\:/Users/vital/AndroidStudioProjects/BookExchange/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.3796875" />
+        <entry key="..\:/Users/vital/AndroidStudioProjects/BookExchange/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.21052631578947367" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

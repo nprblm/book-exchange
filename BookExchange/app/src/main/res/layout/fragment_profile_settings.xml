@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".UI.profile.settings.ProfileSettingsFragment"
+    android:background="@color/dark_grey"
+    app:layout_constraintTop_toTopOf="parent"
+    android:id="@+id/fragment_profile_settings">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:gravity="center_horizontal">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
+                android:id="@+id/profile_image"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:layout_marginTop="40dp"/>
+
+            <Button
+                android:id="@+id/change_photo_button"
+                android:layout_width="300dp"
+                android:layout_marginTop="10dp"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/orange"
+                android:fontFamily="@font/open_sans_regular"
+                android:text="Change image"
+                android:textColor="@color/dark_grey" />
+
+            <LinearLayout
+                android:layout_width="300dp"
+                android:layout_height="50dp"
+                android:orientation="horizontal"
+                android:layout_marginTop="20dp">
+
+                <ImageView
+                    android:id="@+id/profile_icon"
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_profile_white_96"
+                    android:layout_gravity="center_vertical"/>
+
+                <EditText
+                    android:id="@+id/name_edit_text"
+                    android:layout_width="260dp"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="10dp"
+                    android:ems="10"
+                    android:fontFamily="@font/open_sans_italik"
+                    android:hint="Enter name..."
+                    android:maxLength="30"
+                    android:textColor="@color/orange"
+                    android:textColorHint="@color/light_grey"
+                    android:textSize="18sp"
+                    tools:ignore="TouchTargetSizeCheck" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="300dp"
+                android:layout_height="50dp"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
+
+                <ImageView
+                    android:id="@+id/phone_icon"
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_phone_white_96"
+                    android:layout_gravity="center_vertical"/>
+
+                <LinearLayout
+                    android:layout_width="270dp"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/number_text_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_centerVertical="true"
+                        android:text="+38"
+                        android:textColor="@color/orange"
+                        android:textSize="18sp"
+                        android:gravity="center_vertical"
+                        android:layout_marginLeft="10dp"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/tg_layout"
+                android:layout_width="300dp"
+                android:layout_height="50dp"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
+
+                <ImageView
+                    android:id="@+id/telegram_icon"
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_tg_white_96"
+                    android:layout_gravity="center_vertical"/>
+
+                <LinearLayout
+                    android:layout_width="270dp"
+                    android:layout_height="50dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top"
+                        android:text="t.me/ "
+                        android:layout_marginLeft="10dp"
+                        android:fontFamily="@font/open_sans_italik"
+                        android:textColor="@color/orange"
+                        android:textSize="18sp"
+                        />
+
+                    <EditText
+                        android:id="@+id/telegram_edit_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:ems="10"
+                        android:fontFamily="@font/open_sans_italik"
+                        android:hint="Enter link..."
+                        android:maxLength="30"
+                        android:textColor="@color/orange"
+                        android:textColorHint="@color/light_grey"
+                        android:textSize="18sp"
+                        tools:ignore="TouchTargetSizeCheck" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/fb_layout"
+                android:layout_width="300dp"
+                android:layout_height="50dp"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
+
+                <ImageView
+                    android:id="@+id/facebook_icon"
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_fb_white_96"
+                    android:layout_gravity="center_vertical"/>
+
+                <LinearLayout
+                    android:layout_width="270dp"
+                    android:layout_height="50dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top"
+                        android:text="fb.com/ "
+                        android:layout_marginLeft="10dp"
+                        android:fontFamily="@font/open_sans_italik"
+                        android:textColor="@color/orange"
+                        android:textSize="18sp"
+                        />
+
+                    <EditText
+                        android:id="@+id/facebook_edit_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:ems="10"
+                        android:fontFamily="@font/open_sans_italik"
+                        android:hint="Enter link..."
+                        android:maxLength="30"
+                        android:textColor="@color/orange"
+                        android:textColorHint="@color/light_grey"
+                        android:textSize="18sp"
+                        tools:ignore="TouchTargetSizeCheck" />
+
+                </LinearLayout>
+             </LinearLayout>
+
+            <TextView
+                android:id="@+id/error_mesage"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/open_sans_italik"
+                android:text=""
+                android:textColor="@color/red"
+                android:textSize="16dp" />
+
+            <Button
+                android:id="@+id/save_info_button"
+                android:layout_width="300dp"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/green"
+                android:fontFamily="@font/open_sans_regular"
+                android:text="Save changes"
+                android:textColor="@color/dark_grey" />
+
+        <TextView
+            android:id="@+id/password_text"
+            android:layout_width="300dp"
+            android:layout_marginTop="20dp"
+
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/open_sans_italik"
+            android:text="Your password"
+            android:textColor="@color/orange"
+            android:textSize="20dp" />
+
+        <EditText
+            android:id="@+id/password_edit_text"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:autofillHints="password"
+            android:ems="10"
+            android:fontFamily="@font/open_sans_regular"
+            android:hint="Enter your password..."
+            android:inputType="textPassword"
+            android:minHeight="48dp"
+            android:textColor="@color/light_grey"
+            android:textColorHint="@color/light_grey"
+            android:textSize="18dp"
+            android:maxLength = "20" />
+
+            <TextView
+                android:id="@+id/new_password_text"
+                android:layout_width="300dp"
+                android:layout_marginTop="20dp"
+
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/open_sans_italik"
+                android:text="New password"
+                android:textColor="@color/orange"
+                android:textSize="20dp" />
+            <TextView
+                android:id="@+id/hint"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:fontFamily="@font/open_sans_italik"
+                android:text="min 5 symbols"
+                android:textColor="@color/red"
+                android:textSize="16dp"
+                android:gravity="right"/>
+
+            <EditText
+                android:id="@+id/new_password_edit_text"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:autofillHints="password"
+                android:ems="10"
+                android:fontFamily="@font/open_sans_regular"
+                android:hint="Enter new password..."
+                android:inputType="textPassword"
+                android:minHeight="48dp"
+                android:textColor="@color/light_grey"
+                android:textColorHint="@color/light_grey"
+                android:textSize="18dp"
+                android:maxLength = "20" />
+
+        <TextView
+            android:id="@+id/confirm_password_text"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/open_sans_italik"
+            android:text="Confirm new password"
+            android:textColor="@color/orange"
+            android:textSize="20dp" />
+
+        <EditText
+            android:id="@+id/confirm_new_password_edit_text"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:autofillHints="password"
+            android:ems="10"
+            android:fontFamily="@font/open_sans_regular"
+            android:hint="Enter new password again..."
+            android:inputType="textPassword"
+            android:minHeight="48dp"
+            android:textColor="@color/light_grey"
+            android:textColorHint="@color/light_grey"
+            android:textSize="18dp"
+            android:maxLength = "20"/>
+
+        <TextView
+            android:id="@+id/password_error_mesage"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/open_sans_italik"
+            android:text=""
+            android:textColor="@color/red"
+            android:textSize="16dp" />
+
+        <Button
+            android:id="@+id/edit_password_button"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/green"
+            android:fontFamily="@font/open_sans_regular"
+            android:text="Save new password"
+            android:textColor="@color/dark_grey"
+            android:layout_marginBottom="100dp"/>
+        </LinearLayout>
+
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

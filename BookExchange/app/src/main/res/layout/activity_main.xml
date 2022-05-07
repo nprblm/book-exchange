@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".Avtorizate.MainActivity"
+    android:background="@color/dark_grey">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true">
+
+        <ImageView
+            android:id="@+id/app_logo"
+            android:layout_width="300dp"
+            android:layout_height="100dp"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/be_logo" />
+
+        <TextView
+            android:id="@+id/number_text"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/open_sans_italik"
+            android:text="Phone number"
+            android:textColor="@color/orange"
+            android:textSize="20dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:paddingTop="12dp"
+                android:text="+38"
+                android:textColor="@color/orange"
+                android:textSize="18dp" />
+
+            <EditText
+                android:id="@+id/number_edit_text"
+                android:layout_width="260dp"
+                android:layout_height="wrap_content"
+
+                android:ems="10"
+                android:fontFamily="@font/open_sans_regular"
+                android:hint="Enter your phone number..."
+                android:inputType="number"
+                android:minHeight="48dp"
+                android:textColor="@color/light_grey"
+                android:textColorHint="@color/light_grey"
+                android:textSize="18dp"
+                android:maxLength="10"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/password_text"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/open_sans_italik"
+            android:text="Password"
+            android:textColor="@color/orange"
+            android:textSize="20dp" />
+
+        <EditText
+            android:id="@+id/password_edit_text"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:autofillHints="password"
+            android:ems="10"
+            android:fontFamily="@font/open_sans_regular"
+            android:hint="Enter your password"
+            android:inputType="textPassword"
+            android:minHeight="48dp"
+            android:textColor="@color/light_grey"
+            android:textColorHint="@color/light_grey"
+            android:textSize="18dp"
+            android:maxLength="20"/>
+
+        <CheckBox
+            android:id="@+id/save_login_check_box"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Remember me"
+            android:fontFamily="@font/open_sans_regular"
+            android:textColor="@color/orange"
+            android:textSize="16dp"
+            android:layout_marginTop="10dp"
+            />
+
+        <TextView
+            android:id="@+id/error_mesage"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/open_sans_italik"
+            android:text=""
+            android:textColor="@color/red"
+            android:textSize="16dp" />
+
+        <Button
+            android:id="@+id/login_button"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/green"
+            android:fontFamily="@font/open_sans_regular"
+            android:text="Login"
+            android:textColor="@color/dark_grey"
+            />
+
+        <Button
+            android:id="@+id/register_button"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="@color/orange"
+            android:fontFamily="@font/open_sans_regular"
+            android:text="Register"
+            android:textColor="@color/dark_grey" />
+
+    </LinearLayout>
+
+</RelativeLayout>
