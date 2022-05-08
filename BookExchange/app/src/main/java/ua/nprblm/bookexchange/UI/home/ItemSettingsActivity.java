@@ -64,7 +64,7 @@ public class ItemSettingsActivity extends AppCompatActivity {
     private boolean isNameValid = false;
     private boolean isDescriptionValid = false;
     private boolean isCityValid = false;
-    private boolean isImageValid = false;
+    private final boolean isImageValid = false;
 
     private String name;
     private String description;
