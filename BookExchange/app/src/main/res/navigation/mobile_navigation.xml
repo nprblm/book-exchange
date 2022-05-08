@@ -16,11 +16,6 @@
         android:label="Add"
         tools:layout="@layout/fragment_add" />
     <fragment
-        android:id="@+id/navigation_like"
-        android:name="ua.nprblm.bookexchange.UI.like.LikeFragment"
-        android:label="Like"
-        tools:layout="@layout/fragment_like" />
-    <fragment
         android:id="@+id/navigation_home"
         android:name="ua.nprblm.bookexchange.UI.home.HomeFragment"
         android:label="Home"

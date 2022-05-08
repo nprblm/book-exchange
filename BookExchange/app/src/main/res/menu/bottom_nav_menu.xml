@@ -7,11 +7,6 @@
         android:title="@string/title_home" />
 
     <item
-        android:id="@+id/navigation_like"
-        android:icon="@drawable/ic_like_white_96"
-        android:title="@string/title_like" />
-
-    <item
         android:id="@+id/navigation_add"
         android:icon="@drawable/ic_add_white_96"
         android:title="@string/title_add" />

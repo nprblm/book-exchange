@@ -2,6 +2,7 @@ package ua.nprblm.bookexchange.UI.home;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -49,6 +50,7 @@ public class ItemActivity extends AppCompatActivity {
 
     private Button showContactButton;
     private Button deleteButton;
+    private Button editButton;
     private Button yesButton;
     private Button noButton;
 
@@ -146,6 +148,16 @@ public class ItemActivity extends AppCompatActivity {
             onBackPressed();
         });
 
+        editButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent editItemIntent = new Intent(ItemActivity.this, ItemSettingsActivity.class);
+                editItemIntent.putExtra("id", id);
+                editItemIntent.putExtra("number", phoneNumber);
+                startActivity(editItemIntent);
+            }
+        });
+
     }
 
     private void getData(String id)
@@ -207,7 +219,7 @@ public class ItemActivity extends AppCompatActivity {
     {
         nameText.setText(name);
         descriptionText.setText(desc);
-        cityText.setText("City: "+city);
+        cityText.setText(city);
         timeText.setText(date+" "+time.substring(0,5));
         Picasso.get().load(image).into(img);
     }
@@ -226,6 +238,7 @@ public class ItemActivity extends AppCompatActivity {
         }
         Picasso.get().load(image).into(profileIcon);
         deleteButton.setVisibility(phoneNumber.equals(contactPhoneText.getText().toString().substring(3))?View.VISIBLE:View.GONE);
+        editButton.setVisibility(phoneNumber.equals(contactPhoneText.getText().toString().substring(3))?View.VISIBLE:View.GONE);
     }
 
     private void init()
@@ -240,7 +253,9 @@ public class ItemActivity extends AppCompatActivity {
 
         showContactButton = findViewById(R.id.contact_button);
         deleteButton = findViewById(R.id.delete_button);
+        editButton = findViewById(R.id.edit_button);
         deleteButton.setVisibility(View.GONE);
+        editButton.setVisibility(View.GONE);
 
         noButton = findViewById(R.id.no_button);
         yesButton = findViewById(R.id.yes_button);

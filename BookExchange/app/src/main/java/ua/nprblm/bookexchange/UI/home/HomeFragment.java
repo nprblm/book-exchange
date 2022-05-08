@@ -82,6 +82,7 @@ public class HomeFragment extends Fragment implements HomeAdapter.OnProductClick
                 if(cityChange.getText()!=null)
                 {
                     loadItems(cityChange.getText().toString(),myCheckBox.isChecked());
+                    openCloseButtonPressed();
                 }
             }
         });
@@ -90,48 +91,53 @@ public class HomeFragment extends Fragment implements HomeAdapter.OnProductClick
             @SuppressLint("ResourceType")
             @Override
             public void onClick(View v) {
-                if(!isOpen) {
-                    cityChange.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.trans_in));
-                    myCheckBox.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.trans_in));
-                    filterButton.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.trans_in));
-                    recyclerView.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.trans_in));
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-
-                    cityChange.setVisibility(View.VISIBLE);
-                    myCheckBox.setVisibility(View.VISIBLE);
-                    filterButton.setVisibility(View.VISIBLE);
-                    openCloseButton.setText("▲ Close filters ▲");
-                    openCloseButton.setBackgroundColor(Color.rgb(255, 101, 47));
-                    isOpen=true;
-                }
-                else
-                {
-                    cityChange.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.trans_out));
-                    myCheckBox.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.trans_out));
-                    filterButton.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.trans_out));
-                    recyclerView.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.trans_out));
-
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-
-                    cityChange.setVisibility(View.GONE);
-                    myCheckBox.setVisibility(View.GONE);
-                    filterButton.setVisibility(View.GONE);
-                    openCloseButton.setText("▼ Open filters ▼");
-                    openCloseButton.setBackgroundColor(Color.rgb(20, 167, 108));
-                    isOpen=false;
-                }
+               openCloseButtonPressed();
             }
         });
 
         return root;
+    }
+
+    private void openCloseButtonPressed()
+    {
+        if(!isOpen) {
+            cityChange.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.trans_in));
+            myCheckBox.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.trans_in));
+            filterButton.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.trans_in));
+            recyclerView.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.trans_in));
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            cityChange.setVisibility(View.VISIBLE);
+            myCheckBox.setVisibility(View.VISIBLE);
+            filterButton.setVisibility(View.VISIBLE);
+            openCloseButton.setText("▲ Close filters ▲");
+            openCloseButton.setBackgroundColor(Color.rgb(255, 101, 47));
+            isOpen=true;
+        }
+        else
+        {
+            cityChange.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.trans_out));
+            myCheckBox.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.trans_out));
+            filterButton.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.trans_out));
+            recyclerView.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.trans_out));
+
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            cityChange.setVisibility(View.GONE);
+            myCheckBox.setVisibility(View.GONE);
+            filterButton.setVisibility(View.GONE);
+            openCloseButton.setText("▼ Open filters ▼");
+            openCloseButton.setBackgroundColor(Color.rgb(20, 167, 108));
+            isOpen=false;
+        }
     }
 
     @Override
@@ -228,6 +234,11 @@ public class HomeFragment extends Fragment implements HomeAdapter.OnProductClick
         myCheckBox = root.findViewById(R.id.my_check_box);
         filterButton = root.findViewById(R.id.filter_button);
         cityChange = root.findViewById(R.id.city_edit_text);
+
+        cityChange.setVisibility(View.GONE);
+        myCheckBox.setVisibility(View.GONE);
+        filterButton.setVisibility(View.GONE);
+
         productsRef = FirebaseDatabase.getInstance("https://book-exchange-4777a-default-rtdb.europe-west1.firebasedatabase.app").getReference().child("Products");
     }
 

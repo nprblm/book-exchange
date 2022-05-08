@@ -42,7 +42,7 @@ class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.nameText.setText(products.get(position).getName());
-        holder.cityText.setText("City: " + products.get(position).getCity());
+        holder.cityText.setText(products.get(position).getCity());
         holder.dateText.setText(products.get(position).getDate()+" "+products.get(position).getTime().substring(0,5));
         Picasso.get().load(products.get(position).getImage()).into(holder.productImage);
     }

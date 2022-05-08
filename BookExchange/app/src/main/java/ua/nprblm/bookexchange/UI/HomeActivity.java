@@ -45,7 +45,7 @@ public class HomeActivity extends AppCompatActivity {
         navView = findViewById(R.id.nav_view);
 
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_home, R.id.navigation_like, R.id.navigation_add, R.id.navigation_profile)
+                R.id.navigation_home, R.id.navigation_add, R.id.navigation_profile)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_home);
         NavigationUI.setupWithNavController(binding.navView, navController);

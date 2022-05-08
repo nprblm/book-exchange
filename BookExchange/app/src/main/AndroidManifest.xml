@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BookExchange">
         <activity
+            android:name=".UI.home.ItemSettingsActivity"
+            android:exported="false" />
+        <activity
             android:name=".UI.home.ItemActivity"
             android:exported="false" />
         <activity
