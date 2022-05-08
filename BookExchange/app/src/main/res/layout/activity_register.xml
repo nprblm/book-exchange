@@ -40,7 +40,7 @@
             android:ems="10"
             android:fontFamily="@font/open_sans_regular"
             android:hint="Enter your username..."
-            android:inputType="textPersonName"
+            android:inputType="text"
             android:minHeight="48dp"
             android:textColor="@color/light_grey"
             android:textColorHint="@color/light_grey"

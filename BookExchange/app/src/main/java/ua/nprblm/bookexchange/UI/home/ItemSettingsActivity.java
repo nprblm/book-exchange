@@ -49,7 +49,7 @@ public class ItemSettingsActivity extends AppCompatActivity {
     private static final int RESULT_OK = -1;
     private Uri imageUri;
     private StorageReference imageRef;
-    private String downloadImageUrl;
+    private String downloadImageUrl = "";
 
     private EditText nameEditText;
     private EditText descriptionEditText;
@@ -131,17 +131,22 @@ public class ItemSettingsActivity extends AppCompatActivity {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isDataValid())
-                {
+                if(isDataValid()) {
                     loadingBar.setTitle("Uploading product...");
                     loadingBar.setMessage("Please, wait a few seconds");
                     loadingBar.setCanceledOnTouchOutside(false);
                     loadingBar.show();
 
+                    thisProduct.setName(nameEditText.getText().toString());
+                    thisProduct.setDescription(descriptionEditText.getText().toString());
+                    thisProduct.setCity(cityChange.getText().toString());
+
                     errorMessage.setText("");
-                    if(downloadImageUrl!=null && !downloadImageUrl.equals(""))
-                    downloadImage(id, savedInstanceState);
-                    uploadData(savedInstanceState, thisProduct);
+                    if (imageUri != null) {
+                        downloadImage(thisProduct.getId());
+                    } else {
+                        uploadData(thisProduct.getId(), thisProduct.getDate(), thisProduct.getTime(), thisProduct.getName(), thisProduct.getDescription(), thisProduct.getCity(), thisProduct.getImage(), thisProduct.getNumber());
+                    }
                 }
                 else
                 {
@@ -213,8 +218,13 @@ public class ItemSettingsActivity extends AppCompatActivity {
         this.city = city;
     }
 
-    private void downloadImage(String uID, Bundle savedInstanceState)
+    private void downloadImage(String uID)
     {
+        loadingBar.setTitle("Uploading product...");
+        loadingBar.setMessage("Please, wait a few seconds");
+        loadingBar.setCanceledOnTouchOutside(false);
+        loadingBar.show();
+
         StorageReference filePath = imageRef.child(uID + ".jpeg");
         final UploadTask uploadTask = filePath.putFile(imageUri);
 
@@ -244,6 +254,10 @@ public class ItemSettingsActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             Uri downloadUrl = task.getResult();
                             downloadImageUrl = String.valueOf(downloadUrl);
+                            System.out.println(downloadImageUrl);
+                            thisProduct.setImage(downloadImageUrl);
+                            loadingBar.dismiss();
+                            uploadData(thisProduct.getId(), thisProduct.getDate(), thisProduct.getTime(), thisProduct.getName(), thisProduct.getDescription(), thisProduct.getCity(), thisProduct.getImage(), thisProduct.getNumber());
                         }
                     }
                 });
@@ -251,22 +265,20 @@ public class ItemSettingsActivity extends AppCompatActivity {
         });
     }
 
-    private void uploadData(Bundle savedInstanceState, Products item)
+    private void uploadData(String productId, String date, String time, String username, String desc, String citySet, String imageLink, String number)
     {
         HashMap<String,Object> productMap = new HashMap<>();
 
-        productMap.put("id", item.getId());
-        productMap.put("date", item.getDate());
-        productMap.put("time", item.getTime());
-        productMap.put("name", name);
-        productMap.put("description", description);
-        productMap.put("city", city);
-        if(downloadImageUrl!=null && !downloadImageUrl.equals("")) {
-            productMap.put("image", downloadImageUrl);
-        }
-        productMap.put("number", item.getNumber());
+        productMap.put("id",productId);
+        productMap.put("date", date);
+        productMap.put("time", time);
+        productMap.put("name", username);
+        productMap.put("description", desc);
+        productMap.put("city", citySet);
+        productMap.put("image", imageLink);
+        productMap.put("number", number);
 
-        productsRef.child(item.getId()).updateChildren(productMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+        productsRef.child(id).updateChildren(productMap).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful())
@@ -274,7 +286,6 @@ public class ItemSettingsActivity extends AppCompatActivity {
                     Toast.makeText(ItemSettingsActivity.this, "Product uploading is successful", Toast.LENGTH_SHORT).show();
                     loadingBar.dismiss();
                     hideKeyboard(ItemSettingsActivity.this);
-                    goBack();
                 }
                 else
                 {
@@ -303,17 +314,6 @@ public class ItemSettingsActivity extends AppCompatActivity {
         descriptionEditText.setText(description);
         cityChange.setText(city);
         Picasso.get().load(imageLink).into(addImage);
-    }
-
-    private void goBack()
-    {
-        Intent itemIntent = new Intent(ItemSettingsActivity.this, ItemActivity.class);
-        itemIntent.putExtra("id", id);
-        itemIntent.putExtra("number", phoneNumber);
-        itemIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        itemIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        itemIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        startActivity(itemIntent);
     }
 
     private void init()

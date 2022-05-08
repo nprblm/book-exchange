@@ -26,6 +26,7 @@ import com.squareup.picasso.Picasso;
 
 import ua.nprblm.bookexchange.Products;
 import ua.nprblm.bookexchange.R;
+import ua.nprblm.bookexchange.UI.HomeActivity;
 import ua.nprblm.bookexchange.Users;
 
 public class ItemActivity extends AppCompatActivity {
@@ -158,6 +159,13 @@ public class ItemActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        getData(id);
     }
 
     private void getData(String id)

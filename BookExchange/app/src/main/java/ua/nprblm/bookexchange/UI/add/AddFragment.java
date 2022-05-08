@@ -294,20 +294,6 @@ public class AddFragment extends Fragment {
 
     }
 
-    private void init(View root)
-    {
-        addImage = root.findViewById(R.id.add_image);
-        loadingBar = new ProgressDialog(getActivity());
-        nameEditText = root.findViewById(R.id.name_edit_text);
-        descriptionEditText = root.findViewById(R.id.description_edit_text);
-        cityChange = root.findViewById(R.id.city_edit_text);
-        errorMessage = root.findViewById(R.id.error_mesage);
-        addButton = root.findViewById(R.id.add_button);
-        addPictureButton = root.findViewById(R.id.add_picture_button);
-        imageRef = FirebaseStorage.getInstance().getReference().child("Product Images");
-        productsRef = FirebaseDatabase.getInstance("https://book-exchange-4777a-default-rtdb.europe-west1.firebasedatabase.app").getReference().child("Products");
-    }
-
     private void clearAll()
     {
         addImage.setImageResource(R.drawable.empty);
@@ -325,5 +311,20 @@ public class AddFragment extends Fragment {
             view = new View(activity);
         }
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    private void init(View root)
+    {
+        addImage = root.findViewById(R.id.add_image);
+        loadingBar = new ProgressDialog(getActivity());
+        nameEditText = root.findViewById(R.id.name_edit_text);
+        descriptionEditText = root.findViewById(R.id.description_edit_text);
+
+        cityChange = root.findViewById(R.id.city_edit_text);
+        errorMessage = root.findViewById(R.id.error_mesage);
+        addButton = root.findViewById(R.id.add_button);
+        addPictureButton = root.findViewById(R.id.add_picture_button);
+        imageRef = FirebaseStorage.getInstance().getReference().child("Product Images");
+        productsRef = FirebaseDatabase.getInstance("https://book-exchange-4777a-default-rtdb.europe-west1.firebasedatabase.app").getReference().child("Products");
     }
 }

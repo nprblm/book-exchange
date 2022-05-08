@@ -42,7 +42,7 @@
                     android:layout_height="140dp"
                     android:adjustViewBounds="true"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/ic_add_image_white_240" />
+                    android:src="@drawable/empty" />
 
             </androidx.cardview.widget.CardView>
 

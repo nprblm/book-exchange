@@ -67,7 +67,8 @@
                     android:textColor="@color/orange"
                     android:textColorHint="@color/light_grey"
                     android:textSize="18sp"
-                    tools:ignore="TouchTargetSizeCheck" />
+                    tools:ignore="TouchTargetSizeCheck"
+                    android:inputType="text"/>
             </LinearLayout>
 
             <LinearLayout
@@ -147,7 +148,8 @@
                         android:textColor="@color/orange"
                         android:textColorHint="@color/light_grey"
                         android:textSize="18sp"
-                        tools:ignore="TouchTargetSizeCheck" />
+                        tools:ignore="TouchTargetSizeCheck"
+                        android:inputType="text"/>
 
                 </LinearLayout>
 
@@ -195,7 +197,8 @@
                         android:textColor="@color/orange"
                         android:textColorHint="@color/light_grey"
                         android:textSize="18sp"
-                        tools:ignore="TouchTargetSizeCheck" />
+                        tools:ignore="TouchTargetSizeCheck"
+                        android:inputType="text"/>
 
                 </LinearLayout>
              </LinearLayout>
