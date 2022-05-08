@@ -11,14 +11,17 @@
         android:theme="@style/Theme.BookExchange">
         <activity
             android:name=".UI.home.ItemSettingsActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".UI.home.ItemActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".UI.HomeActivity"
             android:exported="false"
-            android:label="@string/title_activity_home" />
+            android:label="@string/title_activity_home"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".Avtorizate.RegisterActivity"
             android:exported="false" />

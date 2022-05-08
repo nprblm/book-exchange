@@ -4,16 +4,22 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -28,6 +34,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Locale;
 
 import ua.nprblm.bookexchange.Cities;
 import ua.nprblm.bookexchange.Products;
@@ -52,11 +59,15 @@ public class HomeFragment extends Fragment implements HomeAdapter.OnProductClick
     private String phoneNumber;
 
     private boolean isOpen = false;
+    private boolean isSearchOpen = false;
 
-    private Button filterButton;
-    private Button openCloseButton;
+
+    private ImageView openCloseButton;
+    private ImageView searchButton;
 
     private CheckBox myCheckBox;
+
+    private EditText searchEditText;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -76,13 +87,34 @@ public class HomeFragment extends Fragment implements HomeAdapter.OnProductClick
         cityChange.setThreshold(1);
         cityChange.setAdapter(adapter);
 
-        filterButton.setOnClickListener(new View.OnClickListener() {
+        searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(cityChange.getText()!=null)
+                if(!isSearchOpen) {
+                    searchEditText.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.trans_in_left));
+                    openCloseButton.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.trans_in_left));
+                    searchEditText.setVisibility(View.VISIBLE);
+                    openCloseButton.setVisibility(View.VISIBLE);
+                    isSearchOpen = true;
+                }
+                else
                 {
-                    loadItems(cityChange.getText().toString(),myCheckBox.isChecked());
-                    openCloseButtonPressed();
+                    if(isOpen)
+                    {
+                        cityChange.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.trans_out));
+                        myCheckBox.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.trans_out));
+                        recyclerView.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.trans_out));
+
+                        cityChange.setVisibility(View.GONE);
+                        myCheckBox.setVisibility(View.GONE);
+                        isOpen=false;
+                    }
+
+                    searchEditText.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.trans_out_left));
+                    openCloseButton.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.trans_out_left));
+                    searchEditText.setVisibility(View.GONE);
+                    openCloseButton.setVisibility(View.GONE);
+                    isSearchOpen = false;
                 }
             }
         });
@@ -95,6 +127,35 @@ public class HomeFragment extends Fragment implements HomeAdapter.OnProductClick
             }
         });
 
+        searchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    loadItems(searchEditText.getText().toString(), cityChange.getText().toString(), myCheckBox.isChecked());
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        cityChange.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    loadItems(searchEditText.getText().toString(), cityChange.getText().toString(), myCheckBox.isChecked());
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        myCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadItems(searchEditText.getText().toString(), cityChange.getText().toString(), myCheckBox.isChecked());
+            }
+        });
+
         return root;
     }
 
@@ -103,7 +164,6 @@ public class HomeFragment extends Fragment implements HomeAdapter.OnProductClick
         if(!isOpen) {
             cityChange.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.trans_in));
             myCheckBox.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.trans_in));
-            filterButton.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.trans_in));
             recyclerView.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.trans_in));
             try {
                 Thread.sleep(100);
@@ -113,16 +173,12 @@ public class HomeFragment extends Fragment implements HomeAdapter.OnProductClick
 
             cityChange.setVisibility(View.VISIBLE);
             myCheckBox.setVisibility(View.VISIBLE);
-            filterButton.setVisibility(View.VISIBLE);
-            openCloseButton.setText("▲ Close filters ▲");
-            openCloseButton.setBackgroundColor(Color.rgb(255, 101, 47));
             isOpen=true;
         }
         else
         {
             cityChange.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.trans_out));
             myCheckBox.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.trans_out));
-            filterButton.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.trans_out));
             recyclerView.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.trans_out));
 
             try {
@@ -133,9 +189,6 @@ public class HomeFragment extends Fragment implements HomeAdapter.OnProductClick
 
             cityChange.setVisibility(View.GONE);
             myCheckBox.setVisibility(View.GONE);
-            filterButton.setVisibility(View.GONE);
-            openCloseButton.setText("▼ Open filters ▼");
-            openCloseButton.setBackgroundColor(Color.rgb(20, 167, 108));
             isOpen=false;
         }
     }
@@ -143,8 +196,7 @@ public class HomeFragment extends Fragment implements HomeAdapter.OnProductClick
     @Override
     public void onStart() {
         super.onStart();
-        loadItems("",false);
-
+        loadItems(null,null,false);
     }
 
     @Override
@@ -170,7 +222,7 @@ public class HomeFragment extends Fragment implements HomeAdapter.OnProductClick
         startActivity(itemIntent);
     }
 
-    private void loadItems(String cityName, boolean onlyMyBooks)
+    private void loadItems(String searchText, String cityName, boolean onlyMyBooks)
     {
         DatabaseReference rootRef = FirebaseDatabase.getInstance("https://book-exchange-4777a-default-rtdb.europe-west1.firebasedatabase.app").getReference();
         DatabaseReference productsRef = rootRef.child("Products");
@@ -180,22 +232,42 @@ public class HomeFragment extends Fragment implements HomeAdapter.OnProductClick
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ArrayList<Products> list = new ArrayList<>();
-                ArrayList<Products> onlyMyList = new ArrayList<>();
                 for(DataSnapshot ds : dataSnapshot.getChildren()) {
                     Products product = ds.getValue(Products.class);
-                    if(cityName.equals("")||cityName.equals(product.getCity())) {
-                        list.add(product);
-                        if (product.getNumber().equals(phoneNumber)) {
-                            onlyMyList.add(product);
-                        }
+                    list.add(product);
+                }
+
+                if(searchText!=null && !searchText.equals(""))
+                {
+                    for(int i =0; i<list.size();i++)
+                    if(!list.get(i).getName().toLowerCase(Locale.ROOT).contains(searchText.toLowerCase(Locale.ROOT)))
+                    {
+                        list.remove(i);
+                        i--;
                     }
                 }
-                if(onlyMyBooks) {
-                    setProducts(onlyMyList);
+                if(cityName!=null && !cityName.equals(""))
+                {
+                    for(int i = 0; i<list.size();i++)
+                        if(!list.get(i).getCity().toLowerCase(Locale.ROOT).equals(cityName.toLowerCase(Locale.ROOT)))
+                        {
+                            list.remove(i);
+                            i--;
+                        }
                 }
-                else {
-                    setProducts(list);
+
+                if(onlyMyBooks)
+                {
+                    for(int i = 0; i<list.size();i++)
+                        if(!list.get(i).getNumber().equals(phoneNumber))
+                        {
+                            list.remove(i);
+                            i--;
+                        }
                 }
+
+                setProducts(list);
+
                 Collections.reverse(products);
                 HomeAdapter adapter = new HomeAdapter(products, HomeFragment.this);
 
@@ -231,13 +303,16 @@ public class HomeFragment extends Fragment implements HomeAdapter.OnProductClick
     private void init(View root)
     {
         openCloseButton = root.findViewById(R.id.open_close_button);
+        searchButton = root.findViewById(R.id.search_button);
         myCheckBox = root.findViewById(R.id.my_check_box);
-        filterButton = root.findViewById(R.id.filter_button);
         cityChange = root.findViewById(R.id.city_edit_text);
+        searchEditText = root.findViewById(R.id.search_edit_text);
+
+        searchEditText.setVisibility(View.GONE);
+        openCloseButton.setVisibility(View.GONE);
 
         cityChange.setVisibility(View.GONE);
         myCheckBox.setVisibility(View.GONE);
-        filterButton.setVisibility(View.GONE);
 
         productsRef = FirebaseDatabase.getInstance("https://book-exchange-4777a-default-rtdb.europe-west1.firebasedatabase.app").getReference().child("Products");
     }
