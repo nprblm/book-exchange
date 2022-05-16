@@ -1,4 +1,4 @@
-package ua.nprblm.bookexchange.UI.home;
+package ua.nprblm.bookexchange.UI.home.Item;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
@@ -24,10 +24,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
-import ua.nprblm.bookexchange.Products;
+import ua.nprblm.bookexchange.Models.Products;
 import ua.nprblm.bookexchange.R;
-import ua.nprblm.bookexchange.UI.HomeActivity;
-import ua.nprblm.bookexchange.Users;
+import ua.nprblm.bookexchange.Models.Users;
 
 public class ItemActivity extends AppCompatActivity {
     private final String parentDBName = "Products";
@@ -71,37 +70,14 @@ public class ItemActivity extends AppCompatActivity {
         loadingBar = new ProgressDialog(this);
 
         init();
-
-        if (savedInstanceState == null)
-        {
-            Bundle extras = this.getIntent().getExtras();
-            if (extras == null)
-            {
-                id = null;
-                phoneNumber = null;
-            } else
-            {
-                id = extras.getString("id");
-                phoneNumber = extras.getString("number");
-            }
-        }
-        else
-        {
-            id = (String) savedInstanceState.getSerializable("id");
-            phoneNumber = (String) savedInstanceState.getSerializable("number");
-        }
+        id = getExtras("id", savedInstanceState);
+        phoneNumber = getExtras("number", savedInstanceState);
 
         getData(id);
 
         showContactButton.setOnClickListener(v -> {
             if(!isOpen) {
                 contactLayout.startAnimation(AnimationUtils.loadAnimation(ItemActivity.this, R.anim.trans_in_contact));
-
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
                 contactLayout.setVisibility(View.VISIBLE);
                 showContactButton.setText("▲ Hide contact info ▲");
                 showContactButton.setBackgroundColor(Color.rgb(255, 101, 47));
@@ -110,13 +86,6 @@ public class ItemActivity extends AppCompatActivity {
             else
             {
                 contactLayout.startAnimation(AnimationUtils.loadAnimation(ItemActivity.this, R.anim.trans_out_contact));
-
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
                 contactLayout.setVisibility(View.GONE);
                 showContactButton.setText("▼ Show contact info ▼");
                 showContactButton.setBackgroundColor(Color.rgb(20, 167, 108));
@@ -149,14 +118,11 @@ public class ItemActivity extends AppCompatActivity {
             onBackPressed();
         });
 
-        editButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent editItemIntent = new Intent(ItemActivity.this, ItemSettingsActivity.class);
-                editItemIntent.putExtra("id", id);
-                editItemIntent.putExtra("number", phoneNumber);
-                startActivity(editItemIntent);
-            }
+        editButton.setOnClickListener(v -> {
+            Intent editItemIntent = new Intent(ItemActivity.this, ItemSettingsActivity.class);
+            editItemIntent.putExtra("id", id);
+            editItemIntent.putExtra("number", phoneNumber);
+            startActivity(editItemIntent);
         });
 
     }
@@ -166,6 +132,23 @@ public class ItemActivity extends AppCompatActivity {
     {
         super.onResume();
         getData(id);
+    }
+
+    private String getExtras(String str, Bundle savedInstanceState)
+    {
+        if (savedInstanceState == null)
+        {
+            Bundle extras = this.getIntent().getExtras();
+            if (extras == null||(!str.equals("id")&&!str.equals("number"))) {
+                return null;
+            }
+            else {
+                return extras.getString(str);
+            }
+        }
+        else {
+            return (String) savedInstanceState.getSerializable(str);
+        }
     }
 
     private void getData(String id)
@@ -223,6 +206,7 @@ public class ItemActivity extends AppCompatActivity {
         Toast.makeText(ItemActivity.this, "Product delete is successful", Toast.LENGTH_SHORT).show();
     }
 
+    @SuppressLint("SetTextI18n")
     private void setData(String image, String name, String desc, String city, String date, String time)
     {
         nameText.setText(name);
@@ -232,6 +216,7 @@ public class ItemActivity extends AppCompatActivity {
         Picasso.get().load(image).into(img);
     }
 
+    @SuppressLint("SetTextI18n")
     private void setContactData(String name, String number, String image, String telegram, String facebook)
     {
         contactNameText.setText(name);
@@ -258,31 +243,25 @@ public class ItemActivity extends AppCompatActivity {
         timeText = findViewById(R.id.date_text);
         message = findViewById(R.id.message);
         message.setVisibility(View.GONE);
-
         showContactButton = findViewById(R.id.contact_button);
         deleteButton = findViewById(R.id.delete_button);
         editButton = findViewById(R.id.edit_button);
         deleteButton.setVisibility(View.GONE);
         editButton.setVisibility(View.GONE);
-
         noButton = findViewById(R.id.no_button);
         yesButton = findViewById(R.id.yes_button);
-
         contactLayout = findViewById(R.id.contact_layout);
         deleteLayout = findViewById(R.id.delete_layout);
         contactLayout.setVisibility(View.GONE);
         deleteLayout.setVisibility(View.GONE);
-
         tgLayout = findViewById(R.id.tg_layout);
         fbLayout = findViewById(R.id.fb_layout);
         tgLayout.setVisibility(View.GONE);
         fbLayout.setVisibility(View.GONE);
-
         contactNameText = findViewById(R.id.contact_name_text);
         contactPhoneText = findViewById(R.id.contact_phone_number_text);
         tgText = findViewById(R.id.tg_text);
         fbText = findViewById(R.id.fb_text);
-
         profileIcon = findViewById(R.id.profile_image);
     }
 

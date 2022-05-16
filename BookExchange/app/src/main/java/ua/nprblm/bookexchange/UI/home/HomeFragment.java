@@ -1,25 +1,20 @@
 package ua.nprblm.bookexchange.UI.home;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.view.KeyEvent;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
-import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -36,14 +31,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Locale;
 
-import ua.nprblm.bookexchange.Cities;
-import ua.nprblm.bookexchange.Products;
+import ua.nprblm.bookexchange.Models.Cities;
+import ua.nprblm.bookexchange.Models.Products;
 import ua.nprblm.bookexchange.R;
+import ua.nprblm.bookexchange.UI.home.Item.ItemActivity;
 import ua.nprblm.bookexchange.databinding.FragmentHomeBinding;
 
 public class HomeFragment extends Fragment implements HomeAdapter.OnProductClickListener {
 
-    private HomeViewModel homeViewModel;
     private FragmentHomeBinding binding;
 
     private AutoCompleteTextView cityChange;
@@ -51,11 +46,8 @@ public class HomeFragment extends Fragment implements HomeAdapter.OnProductClick
     private RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
 
-    private DatabaseReference productsRef;
-
     private ArrayList<Products> products = new ArrayList<>();
 
-    private String city;
     private String phoneNumber;
 
     private boolean isOpen = false;
@@ -71,14 +63,12 @@ public class HomeFragment extends Fragment implements HomeAdapter.OnProductClick
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        homeViewModel =
-                new ViewModelProvider(this).get(HomeViewModel.class);
+        new ViewModelProvider(this).get(HomeViewModel.class);
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         init(root);
         phoneNumber = getPhoneNumber(savedInstanceState);
-        recyclerView = root.findViewById(R.id.recycler_view);
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
@@ -87,74 +77,71 @@ public class HomeFragment extends Fragment implements HomeAdapter.OnProductClick
         cityChange.setThreshold(1);
         cityChange.setAdapter(adapter);
 
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!isSearchOpen) {
-                    searchEditText.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.trans_in_left));
-                    openCloseButton.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.trans_in_left));
-                    searchEditText.setVisibility(View.VISIBLE);
-                    openCloseButton.setVisibility(View.VISIBLE);
-                    isSearchOpen = true;
-                }
-                else
+        searchButton.setOnClickListener(v -> {
+            if(!isSearchOpen) {
+                searchEditText.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.trans_in_left));
+                openCloseButton.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.trans_in_left));
+                searchEditText.setVisibility(View.VISIBLE);
+                openCloseButton.setVisibility(View.VISIBLE);
+                isSearchOpen = true;
+            }
+            else
+            {
+                if(isOpen)
                 {
-                    if(isOpen)
-                    {
-                        cityChange.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.trans_out));
-                        myCheckBox.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.trans_out));
-                        recyclerView.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.trans_out));
+                    cityChange.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.trans_out));
+                    myCheckBox.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.trans_out));
+                    recyclerView.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.trans_out));
 
-                        cityChange.setVisibility(View.GONE);
-                        myCheckBox.setVisibility(View.GONE);
-                        isOpen=false;
-                    }
-
-                    searchEditText.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.trans_out_left));
-                    openCloseButton.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.trans_out_left));
-                    searchEditText.setVisibility(View.GONE);
-                    openCloseButton.setVisibility(View.GONE);
-                    isSearchOpen = false;
+                    cityChange.setVisibility(View.GONE);
+                    myCheckBox.setVisibility(View.GONE);
+                    isOpen=false;
                 }
+
+                searchEditText.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.trans_out_left));
+                openCloseButton.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.trans_out_left));
+                searchEditText.setVisibility(View.GONE);
+                openCloseButton.setVisibility(View.GONE);
+                isSearchOpen = false;
             }
         });
 
-        openCloseButton.setOnClickListener(new View.OnClickListener() {
-            @SuppressLint("ResourceType")
-            @Override
-            public void onClick(View v) {
-               openCloseButtonPressed();
-            }
-        });
+        openCloseButton.setOnClickListener(v -> openCloseButtonPressed());
 
-        searchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
                     loadItems(searchEditText.getText().toString(), cityChange.getText().toString(), myCheckBox.isChecked());
-                    return true;
-                }
-                return false;
             }
         });
 
-        cityChange.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        cityChange.addTextChangedListener(new TextWatcher() {
             @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    loadItems(searchEditText.getText().toString(), cityChange.getText().toString(), myCheckBox.isChecked());
-                    return true;
-                }
-                return false;
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
             }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                loadItems(searchEditText.getText().toString(), cityChange.getText().toString(), myCheckBox.isChecked()); }
         });
 
-        myCheckBox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadItems(searchEditText.getText().toString(), cityChange.getText().toString(), myCheckBox.isChecked());
-            }
-        });
+        myCheckBox.setOnClickListener(v -> loadItems(searchEditText.getText().toString(), cityChange.getText().toString(), myCheckBox.isChecked()));
 
         return root;
     }
@@ -165,12 +152,6 @@ public class HomeFragment extends Fragment implements HomeAdapter.OnProductClick
             cityChange.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.trans_in));
             myCheckBox.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.trans_in));
             recyclerView.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.trans_in));
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
             cityChange.setVisibility(View.VISIBLE);
             myCheckBox.setVisibility(View.VISIBLE);
             isOpen=true;
@@ -180,13 +161,6 @@ public class HomeFragment extends Fragment implements HomeAdapter.OnProductClick
             cityChange.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.trans_out));
             myCheckBox.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.trans_out));
             recyclerView.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.trans_out));
-
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
             cityChange.setVisibility(View.GONE);
             myCheckBox.setVisibility(View.GONE);
             isOpen=false;
@@ -209,10 +183,6 @@ public class HomeFragment extends Fragment implements HomeAdapter.OnProductClick
         this.products = products;
     }
 
-    public ArrayList<Products> getProducts() {
-        return products;
-    }
-
     @Override
     public void onProductClick(int position) {
         System.out.println(products.get(position).getName());
@@ -230,15 +200,15 @@ public class HomeFragment extends Fragment implements HomeAdapter.OnProductClick
 
         myTopPostsQuery.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 ArrayList<Products> list = new ArrayList<>();
+
                 for(DataSnapshot ds : dataSnapshot.getChildren()) {
                     Products product = ds.getValue(Products.class);
                     list.add(product);
                 }
 
-                if(searchText!=null && !searchText.equals(""))
-                {
+                if(searchText!=null && !searchText.equals("")) {
                     for(int i =0; i<list.size();i++)
                     if(!list.get(i).getName().toLowerCase(Locale.ROOT).contains(searchText.toLowerCase(Locale.ROOT)))
                     {
@@ -246,8 +216,8 @@ public class HomeFragment extends Fragment implements HomeAdapter.OnProductClick
                         i--;
                     }
                 }
-                if(cityName!=null && !cityName.equals(""))
-                {
+
+                if(cityName!=null && !cityName.equals("")) {
                     for(int i = 0; i<list.size();i++)
                         if(!list.get(i).getCity().toLowerCase(Locale.ROOT).equals(cityName.toLowerCase(Locale.ROOT)))
                         {
@@ -256,8 +226,7 @@ public class HomeFragment extends Fragment implements HomeAdapter.OnProductClick
                         }
                 }
 
-                if(onlyMyBooks)
-                {
+                if(onlyMyBooks) {
                     for(int i = 0; i<list.size();i++)
                         if(!list.get(i).getNumber().equals(phoneNumber))
                         {
@@ -267,7 +236,6 @@ public class HomeFragment extends Fragment implements HomeAdapter.OnProductClick
                 }
 
                 setProducts(list);
-
                 Collections.reverse(products);
                 HomeAdapter adapter = new HomeAdapter(products, HomeFragment.this);
 
@@ -275,29 +243,24 @@ public class HomeFragment extends Fragment implements HomeAdapter.OnProductClick
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {}
+            public void onCancelled(@NonNull DatabaseError databaseError) {}
         });
     }
 
     private String getPhoneNumber(Bundle savedInstanceState)
     {
-        String number;
-        if (savedInstanceState == null)
-        {
-            Bundle extras = getActivity().getIntent().getExtras();
-            if (extras == null)
-            {
-                number = null;
-            } else
-            {
-                number = extras.getString("number");
+        if (savedInstanceState == null) {
+            Bundle extras = requireActivity().getIntent().getExtras();
+            if (extras == null) {
+                return null;
+            }
+            else {
+                return extras.getString("number");
             }
         }
-        else
-        {
-            number = (String) savedInstanceState.getSerializable("number");
+        else {
+            return  (String) savedInstanceState.getSerializable("number");
         }
-        return number;
     }
 
     private void init(View root)
@@ -307,14 +270,11 @@ public class HomeFragment extends Fragment implements HomeAdapter.OnProductClick
         myCheckBox = root.findViewById(R.id.my_check_box);
         cityChange = root.findViewById(R.id.city_edit_text);
         searchEditText = root.findViewById(R.id.search_edit_text);
-
+        recyclerView = root.findViewById(R.id.recycler_view);
         searchEditText.setVisibility(View.GONE);
         openCloseButton.setVisibility(View.GONE);
-
         cityChange.setVisibility(View.GONE);
         myCheckBox.setVisibility(View.GONE);
-
-        productsRef = FirebaseDatabase.getInstance("https://book-exchange-4777a-default-rtdb.europe-west1.firebasedatabase.app").getReference().child("Products");
     }
 
 }

@@ -1,4 +1,4 @@
-package ua.nprblm.bookexchange;
+package ua.nprblm.bookexchange.Models;
 
 public class Cities {
     public static String[] getList()

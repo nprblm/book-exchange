@@ -1,6 +1,6 @@
 package ua.nprblm.bookexchange.UI.home;
 
-import android.content.Intent;
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,15 +14,13 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-import ua.nprblm.bookexchange.Avtorizate.MainActivity;
-import ua.nprblm.bookexchange.Products;
+import ua.nprblm.bookexchange.Models.Products;
 import ua.nprblm.bookexchange.R;
-import ua.nprblm.bookexchange.UI.HomeActivity;
 
 class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
-    private ArrayList<Products> products;
+    private final ArrayList<Products> products;
 
-    private OnProductClickListener onProductClickListener;
+    private final OnProductClickListener onProductClickListener;
 
     public HomeAdapter(ArrayList<Products> products, OnProductClickListener onProductClickListener) {
         this.products = products;
@@ -35,10 +33,10 @@ class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
     @Override
     public HomeAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.product_item_layout, parent, false);
-        ViewHolder holder = new ViewHolder(view, onProductClickListener);
-        return holder;
+        return new ViewHolder(view, onProductClickListener);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.nameText.setText(products.get(position).getName());
@@ -52,7 +50,7 @@ class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
         return products.size();
     }
 
-    public class ViewHolder extends  RecyclerView.ViewHolder implements View.OnClickListener {
+    public static class ViewHolder extends  RecyclerView.ViewHolder implements View.OnClickListener {
 
         public ImageView productImage;
 

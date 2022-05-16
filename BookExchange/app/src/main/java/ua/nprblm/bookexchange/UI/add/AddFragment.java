@@ -1,5 +1,6 @@
 package ua.nprblm.bookexchange.UI.add;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -23,11 +24,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -38,15 +34,15 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Objects;
 
-import ua.nprblm.bookexchange.Cities;
+import ua.nprblm.bookexchange.Models.Cities;
 import ua.nprblm.bookexchange.R;
 import ua.nprblm.bookexchange.databinding.FragmentAddBinding;
 
 
 public class AddFragment extends Fragment {
 
-    private AddViewModel addViewModel;
     private FragmentAddBinding binding;
 
     private ImageView addImage;
@@ -85,54 +81,45 @@ public class AddFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        addViewModel = new ViewModelProvider(this).get(AddViewModel.class);
+        new ViewModelProvider(this).get(AddViewModel.class);
 
         binding = FragmentAddBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         init(root);
-        loadingBar = new ProgressDialog(getContext());
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_dropdown_item_1line, Cities.getList());
         cityChange.setThreshold(1);
         cityChange.setAdapter(adapter);
 
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(isDataValid())
-                {
-                    loadingBar.setTitle("Uploading product...");
-                    loadingBar.setMessage("Please, wait a few seconds");
-                    loadingBar.setCanceledOnTouchOutside(false);
-                    loadingBar.show();
+        addButton.setOnClickListener(v -> {
+            if(isDataValid())
+            {
+                loadingBar.setTitle("Uploading product...");
+                loadingBar.setMessage("Please, wait a few seconds");
+                loadingBar.setCanceledOnTouchOutside(false);
+                loadingBar.show();
 
-                    errorMessage.setText("");
-                    uniqueId = setUniqueId();
-                    downloadImage(uniqueId, savedInstanceState);
+                errorMessage.setText("");
+                uniqueId = setUniqueId();
+                downloadImage(uniqueId, savedInstanceState);
 
-                    clearAll();
+                clearAll();
 
-                }
-                else
-                {
-                    String messageError = "";
-                    if(!isNameValid) messageError+="Name must have 4 or more characters\n";
-                    if(!isDescriptionValid) messageError+="Description must have 10 or more characters\n";
-                    if(!isCityValid) messageError+="Dont have this city in database\n";
-                    if(!isImageValid) messageError+="You must upload a picture\n";
+            }
+            else
+            {
+                String messageError = "";
+                if(!isNameValid) messageError+="Name must have 4 or more characters\n";
+                if(!isDescriptionValid) messageError+="Description must have 10 or more characters\n";
+                if(!isCityValid) messageError+="Don`t have this city in database\n";
+                if(!isImageValid) messageError+="You must upload a picture\n";
 
-                    errorMessage.setText(messageError);
-                }
+                errorMessage.setText(messageError);
             }
         });
 
-        addPictureButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openGallery();
-            }
-        });
+        addPictureButton.setOnClickListener(v -> openGallery());
 
         return root;
     }
@@ -144,6 +131,7 @@ public class AddFragment extends Fragment {
         startActivityForResult(galleryIntent,GALLERY_PICK);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -168,21 +156,19 @@ public class AddFragment extends Fragment {
         name = nameEditText.getText().toString();
         description = descriptionEditText.getText().toString();
 
-        isNameValid = (name.length()>3?true:false);
-        isDescriptionValid = (description.length()>9?true:false);
+        isNameValid = (name.length() > 3);
+        isDescriptionValid = (description.length() > 9);
         isCityValid = searchInArray(cityChange.getText().toString());
-        isImageValid = (imageUri==null?false:true);
-        return((isNameValid)&&(isDescriptionValid)&&(isCityValid)&&(isImageValid)?true:false);
+        isImageValid = (imageUri != null);
+        return((isNameValid) && (isDescriptionValid) && (isCityValid) && (isImageValid));
     }
 
     private boolean searchInArray(String city)
     {
         String[] array = Cities.getList();
-        for(int i = 0 ;i< array.length;i++)
-        {
-            if(city.toLowerCase(Locale.ROOT).equals(array[i].toLowerCase(Locale.ROOT)))
-            {
-                city = cityChange.getText().toString().substring(0,1).toUpperCase(Locale.ROOT)+cityChange.getText().toString().substring(1).toLowerCase(Locale.ROOT);
+        for (String s : array) {
+            if (city.toLowerCase(Locale.ROOT).equals(s.toLowerCase(Locale.ROOT))) {
+                city = cityChange.getText().toString().substring(0, 1).toUpperCase(Locale.ROOT) + cityChange.getText().toString().substring(1).toLowerCase(Locale.ROOT);
                 setCity(city);
                 return true;
             }
@@ -197,8 +183,8 @@ public class AddFragment extends Fragment {
     private String setUniqueId()
     {
         Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
         date = dateFormat.format(calendar.getTime());
         time = timeFormat.format(calendar.getTime());
 
@@ -213,46 +199,32 @@ public class AddFragment extends Fragment {
         StorageReference filePath = imageRef.child(uID + ".jpeg");
         final UploadTask uploadTask = filePath.putFile(imageUri);
 
-        uploadTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                String message = e.toString();
-                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
-                loadingBar.dismiss();
+        uploadTask.addOnFailureListener(e -> {
+            String message = e.toString();
+            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+            loadingBar.dismiss();
+        }).addOnSuccessListener(taskSnapshot -> uploadTask.continueWithTask(task -> {
+            if (!task.isSuccessful()) {
+                throw Objects.requireNonNull(task.getException());
+            } else {
+                downloadImageUrl = filePath.getDownloadUrl().toString();
+                return filePath.getDownloadUrl();
             }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Task<Uri> uriTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                    @Override
-                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                        if (!task.isSuccessful()) {
-                            throw task.getException();
-                        } else {
-                            downloadImageUrl =filePath.getDownloadUrl().toString();
-                            return filePath.getDownloadUrl();
-                        }
-                    }
-                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Uri> task) {
-                        if (task.isSuccessful()) {
-                            Uri downloadUrl = task.getResult();
-                            downloadImageUrl = String.valueOf(downloadUrl);
+        }).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Uri downloadUrl = task.getResult();
+                downloadImageUrl = String.valueOf(downloadUrl);
 
-                            uploadData(savedInstanceState);
-                        }
-                    }
-                });
+                uploadData(savedInstanceState);
             }
-        });
+        }));
     }
 
     private void uploadData(Bundle savedInstanceState)
     {
         String number;
         if (savedInstanceState == null) {
-            Bundle extras = getActivity().getIntent().getExtras();
+            Bundle extras = requireActivity().getIntent().getExtras();
             if(extras == null) {
                 number= null;
             } else {
@@ -273,25 +245,17 @@ public class AddFragment extends Fragment {
         productMap.put("image", downloadImageUrl);
         productMap.put("number", number);
 
-        productsRef.child(uniqueId).updateChildren(productMap).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if(task.isSuccessful())
-                {
-                    Toast.makeText(getActivity(), "Product uploading is successful", Toast.LENGTH_SHORT).show();
-                    loadingBar.dismiss();
-                    hideKeyboard(getActivity());
-                }
-                else
-                {
-                    Toast.makeText(getActivity(), "Product uploading is fail", Toast.LENGTH_SHORT).show();
-                    loadingBar.dismiss();
-                }
-
+        productsRef.child(uniqueId).updateChildren(productMap).addOnCompleteListener(task -> {
+            if(task.isSuccessful()) {
+                Toast.makeText(getActivity(), "Product uploading is successful", Toast.LENGTH_SHORT).show();
+                loadingBar.dismiss();
+                hideKeyboard(requireActivity());
+            }
+            else {
+                Toast.makeText(getActivity(), "Product uploading is fail", Toast.LENGTH_SHORT).show();
+                loadingBar.dismiss();
             }
         });
-
-
     }
 
     private void clearAll()
@@ -304,9 +268,7 @@ public class AddFragment extends Fragment {
 
     public static void hideKeyboard(Activity activity) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        //Find the currently focused view, so we can grab the correct window token from it.
         View view = activity.getCurrentFocus();
-        //If no view currently has focus, create a new one, just so we can grab a window token from it
         if (view == null) {
             view = new View(activity);
         }
@@ -316,14 +278,13 @@ public class AddFragment extends Fragment {
     private void init(View root)
     {
         addImage = root.findViewById(R.id.add_image);
-        loadingBar = new ProgressDialog(getActivity());
         nameEditText = root.findViewById(R.id.name_edit_text);
         descriptionEditText = root.findViewById(R.id.description_edit_text);
-
         cityChange = root.findViewById(R.id.city_edit_text);
         errorMessage = root.findViewById(R.id.error_mesage);
         addButton = root.findViewById(R.id.add_button);
         addPictureButton = root.findViewById(R.id.add_picture_button);
+        loadingBar = new ProgressDialog(getActivity());
         imageRef = FirebaseStorage.getInstance().getReference().child("Product Images");
         productsRef = FirebaseDatabase.getInstance("https://book-exchange-4777a-default-rtdb.europe-west1.firebasedatabase.app").getReference().child("Products");
     }

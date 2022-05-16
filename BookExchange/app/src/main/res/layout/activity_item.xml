@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UI.home.ItemActivity"
+    tools:context=".UI.home.Item.ItemActivity"
     android:id="@+id/item_activity"
     android:background="@color/dark_grey"
     >
@@ -131,7 +131,7 @@
                             android:adjustViewBounds="true"
                             android:layout_gravity="center"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/ic_defoult_profile_240" />
+                            android:src="@drawable/ic_default_profile_240" />
 
                         <LinearLayout
                         android:id="@+id/contact_phone_layout"

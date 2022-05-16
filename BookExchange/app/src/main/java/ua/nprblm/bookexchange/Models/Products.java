@@ -1,4 +1,6 @@
-package ua.nprblm.bookexchange;
+package ua.nprblm.bookexchange.Models;
+
+import androidx.annotation.NonNull;
 
 public class Products {
     private String id, date, time, name, description, city, image, number;
@@ -83,6 +85,7 @@ public class Products {
         this.number = number;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Products{" +

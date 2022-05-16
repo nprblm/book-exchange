@@ -18,7 +18,6 @@ import androidx.annotation.AnyRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -29,6 +28,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.HashMap;
+import java.util.Objects;
 
 import ua.nprblm.bookexchange.R;
 
@@ -57,7 +57,6 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         init();
-
         loadingBar = new ProgressDialog(this);
 
         numberEditText.addTextChangedListener(new TextWatcher() {
@@ -84,12 +83,12 @@ public class RegisterActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                setErrorMessage((confirmPasswordEditText.getText().toString().equals(passwordEditText.getText().toString())?"":"Passwords is not equals!"));
+                errorMessage.setText((confirmPasswordEditText.getText().toString().equals(passwordEditText.getText().toString())?"":"Passwords is not equals!"));
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                setErrorMessage((confirmPasswordEditText.getText().toString().equals(passwordEditText.getText().toString())?"":"Passwords is not equals!"));
+                errorMessage.setText((confirmPasswordEditText.getText().toString().equals(passwordEditText.getText().toString())?"":"Passwords is not equals!"));
             }
         });
 
@@ -100,7 +99,6 @@ public class RegisterActivity extends AppCompatActivity {
     private void CreateAccount()
     {
         if(isDataValid()) {
-
             String username = loginEditText.getText().toString();
             String number = numberEditText.getText().toString();
             String password = passwordEditText.getText().toString();
@@ -113,7 +111,6 @@ public class RegisterActivity extends AppCompatActivity {
             loadingBar.show();
 
             errorMessage.setText("");
-
         }
         else
         {
@@ -122,7 +119,7 @@ public class RegisterActivity extends AppCompatActivity {
             if(!isNumberValid) messageError+="Number is not valid\n";
             if(!isPasswordValid) messageError+="Password is not valid\n";
 
-            setErrorMessage(messageError);
+            errorMessage.setText(messageError);
         }
     }
 
@@ -138,7 +135,6 @@ public class RegisterActivity extends AppCompatActivity {
     {
         final DatabaseReference RootRef;
         RootRef = FirebaseDatabase.getInstance("https://book-exchange-4777a-default-rtdb.europe-west1.firebasedatabase.app").getReference();
-
 
         RootRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -159,6 +155,9 @@ public class RegisterActivity extends AppCompatActivity {
                             Toast.makeText(RegisterActivity.this, "Register is successful", Toast.LENGTH_SHORT).show();
 
                             Intent loginIntent = new Intent(RegisterActivity.this, MainActivity.class);
+                            loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            loginIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                             startActivity(loginIntent);
                         }
                         else
@@ -172,7 +171,7 @@ public class RegisterActivity extends AppCompatActivity {
                 else
                 {
                     Toast.makeText(RegisterActivity.this, "Number is already used", Toast.LENGTH_SHORT).show();
-                    setErrorMessage("Number is already used");
+                    errorMessage.setText("Number is already used");
                     loadingBar.dismiss();
                 }
             }
@@ -184,35 +183,28 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    private void setErrorMessage(String message)
-    {
-        errorMessage.setText(message);
-    }
-
     private void createImage(String name, String phoneNumber, String password)
     {
         Resources res = this.getResources();
-        int drawableResourceId = this.getResources().getIdentifier("ic_defoult_profile_240", "drawable", this.getPackageName());
+        int drawableResourceId = this.getResources().getIdentifier("ic_default_profile_240", "drawable", this.getPackageName());
         Uri imageUri = getUriToResource(res,drawableResourceId);
 
         StorageReference filePath = FirebaseStorage.getInstance().getReference().child("Profile Images").child(phoneNumber + ".jpeg");
         final UploadTask uploadTask = filePath.putFile(imageUri);
 
-        uploadTask.addOnFailureListener(e -> loadingBar.dismiss()).addOnSuccessListener(taskSnapshot -> {
-            Task<Uri> uriTask = uploadTask.continueWithTask(task -> {
-                if (!task.isSuccessful()) {
-                    throw task.getException();
-                } else {
-                    return filePath.getDownloadUrl();
-                }
-            }).addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    Uri downloadUrl = task.getResult();
-                    String downloadImageUrl = String.valueOf(downloadUrl);
-                    publishData(name, phoneNumber, password, downloadImageUrl);
-                }
-            });
-        });
+        uploadTask.addOnFailureListener(e -> loadingBar.dismiss()).addOnSuccessListener(taskSnapshot -> uploadTask.continueWithTask(task -> {
+            if (!task.isSuccessful()) {
+                throw Objects.requireNonNull(task.getException());
+            } else {
+                return filePath.getDownloadUrl();
+            }
+        }).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Uri downloadUrl = task.getResult();
+                String downloadImageUrl = String.valueOf(downloadUrl);
+                publishData(name, phoneNumber, password, downloadImageUrl);
+            }
+        }));
     }
 
     public static Uri getUriToResource(@NonNull Resources res,
@@ -227,12 +219,10 @@ public class RegisterActivity extends AppCompatActivity {
     private void init()
     {
         registerButton = findViewById(R.id.register_button);
-
         loginEditText = findViewById(R.id.login_edit_text);
         numberEditText = findViewById(R.id.number_edit_text);
         passwordEditText = findViewById(R.id.password_edit_text);
         confirmPasswordEditText= findViewById(R.id.confirm_password_edit_text);
-
         errorMessage = findViewById(R.id.error_mesage);
     }
 

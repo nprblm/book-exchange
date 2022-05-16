@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UI.home.ItemSettingsActivity"
+    tools:context=".UI.home.Item.ItemSettingsActivity"
     android:background="@color/dark_grey"
     app:layout_constraintTop_toTopOf="parent">
 
@@ -95,7 +95,7 @@
                 android:textColor="@color/light_grey"
                 android:textColorHint="@color/light_grey"
                 android:textSize="18sp"
-                android:maxLength ="30"
+                android:maxLength ="350"
                 />
 
             <LinearLayout

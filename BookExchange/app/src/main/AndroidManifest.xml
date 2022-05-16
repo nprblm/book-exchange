@@ -10,11 +10,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BookExchange">
         <activity
-            android:name=".UI.home.ItemSettingsActivity"
+            android:name=".UI.home.Item.ItemSettingsActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustPan"/>
         <activity
-            android:name=".UI.home.ItemActivity"
+            android:name=".UI.home.Item.ItemActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustPan"/>
         <activity

@@ -1,5 +1,6 @@
 package ua.nprblm.bookexchange.UI.profile.settings;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
@@ -11,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,11 +21,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -38,12 +33,12 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
-import java.util.regex.Matcher;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
+import ua.nprblm.bookexchange.Models.Users;
 import ua.nprblm.bookexchange.R;
 import ua.nprblm.bookexchange.UI.profile.ProfileFragment;
-import ua.nprblm.bookexchange.Users;
 import ua.nprblm.bookexchange.databinding.FragmentProfileSettingsBinding;
 
 public class ProfileSettingsFragment extends Fragment {
@@ -74,28 +69,22 @@ public class ProfileSettingsFragment extends Fragment {
     private Button changePhotoButton;
 
     private boolean isNameValid;
-    private boolean isPasswordValid;
     private boolean isTgValid;
     private boolean isFbValid;
 
-    private Users user = new Users();
+    private final Users user = new Users();
 
-    private ProfileSettingsViewModel profileSettingsViewModel;
     private FragmentProfileSettingsBinding binding;
 
     private ProgressDialog loadingBar;
 
-    private Bundle bundle;
-
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        profileSettingsViewModel =
-                new ViewModelProvider(this).get(ProfileSettingsViewModel.class);
+        new ViewModelProvider(this).get(ProfileSettingsViewModel.class);
 
         binding = FragmentProfileSettingsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        bundle = savedInstanceState;
 
         getUser(savedInstanceState);
 
@@ -122,53 +111,42 @@ public class ProfileSettingsFragment extends Fragment {
             }
         });
 
-        changeNameButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(isInfoValid())
-                {
-                    startLoadingBar("Changing info...", "Please, wait a few seconds");
-                    user.setUsername(nameEditText.getText().toString());
-                    user.setTg(telegramEditText.getText().toString());
-                    user.setFb(facebookEditText.getText().toString());
-                    loadDataIntoDB(user.getNumber(), user.getUsername(), user.getPassword(), user.getImage(), user.getTg(), user.getFb(), true);
-                }
-                else
-                {
-                    String messageError = "";
-                    if(!isNameValid) messageError+="Name is not valid\n";
-                    if(!isTgValid) messageError+="Telegram link is not valid\n";
-                    if(!isFbValid) messageError+="Facebook link is not valid\n";
-                    errorMessage.setText(messageError);
-                }
+        changeNameButton.setOnClickListener(v -> {
+            if(isInfoValid())
+            {
+                startLoadingBar();
+                user.setUsername(nameEditText.getText().toString());
+                user.setTg(telegramEditText.getText().toString());
+                user.setFb(facebookEditText.getText().toString());
+                loadDataIntoDB(user.getNumber(), user.getUsername(), user.getPassword(), user.getImage(), user.getTg(), user.getFb(), true);
+            }
+            else
+            {
+                String messageError = "";
+                if(!isNameValid) messageError+="Name is not valid\n";
+                if(!isTgValid) messageError+="Telegram link is not valid\n";
+                if(!isFbValid) messageError+="Facebook link is not valid\n";
+                errorMessage.setText(messageError);
             }
         });
 
-        changePasswordButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(isPasswordInfoValid()&&passwordEditText.getText().toString().equals(user.getPassword()))
-                {
-                    startLoadingBar("Changing info...", "Please, wait a few seconds");
-                    user.setPassword(newPasswordEditText.getText().toString());
-                    loadDataIntoDB(user.getNumber(), user.getUsername(), user.getPassword(), user.getImage(), user.getTg(), user.getFb(), true);
-                }
-                else
-                {
-                    String messageError = "";
-                    if(!isPasswordInfoValid()) messageError += "New password is not valid\n";
-                    if(!passwordEditText.getText().toString().equals(user.getPassword())) messageError += "Password is wrong\n";
-                    passwordErrorMessage.setText(messageError);
-                }
+        changePasswordButton.setOnClickListener(v -> {
+            if(isPasswordInfoValid()&&passwordEditText.getText().toString().equals(user.getPassword()))
+            {
+                startLoadingBar();
+                user.setPassword(newPasswordEditText.getText().toString());
+                loadDataIntoDB(user.getNumber(), user.getUsername(), user.getPassword(), user.getImage(), user.getTg(), user.getFb(), true);
+            }
+            else
+            {
+                String messageError = "";
+                if(!isPasswordInfoValid()) messageError += "New password is not valid\n";
+                if(!passwordEditText.getText().toString().equals(user.getPassword())) messageError += "Password is wrong\n";
+                passwordErrorMessage.setText(messageError);
             }
         });
 
-        changePhotoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openGallery();
-            }
-        });
+        changePhotoButton.setOnClickListener(v -> openGallery());
 
         return root;
     }
@@ -192,51 +170,37 @@ public class ProfileSettingsFragment extends Fragment {
 
         if(requestCode == GALLERY_PICK && resultCode == RESULT_OK && data!=null)
         {
-            startLoadingBar("Changing info...", "Please, wait a few seconds");
+            startLoadingBar();
             imageUri = data.getData();
             profileImage.setImageURI(imageUri);
-            downloadImage(user.getNumber(), bundle);
+            downloadImage(user.getNumber());
         }
     }
 
-    private void downloadImage(String phoneNumber, Bundle savedInstanceState)
+    private void downloadImage(String phoneNumber)
     {
         StorageReference filePath = imageRef.child(phoneNumber + ".jpeg");
         final UploadTask uploadTask = filePath.putFile(imageUri);
 
-        uploadTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                String message = e.toString();
-                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
-                loadingBar.dismiss();
+        uploadTask.addOnFailureListener(e -> {
+            String message = e.toString();
+            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+            loadingBar.dismiss();
+        }).addOnSuccessListener(taskSnapshot -> uploadTask.continueWithTask(task -> {
+            if (!task.isSuccessful()) {
+                throw Objects.requireNonNull(task.getException());
+            } else {
+                downloadImageUrl = filePath.getDownloadUrl().toString();
+                return filePath.getDownloadUrl();
             }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Task<Uri> uriTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                    @Override
-                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                        if (!task.isSuccessful()) {
-                            throw task.getException();
-                        } else {
-                            downloadImageUrl =filePath.getDownloadUrl().toString();
-                            return filePath.getDownloadUrl();
-                        }
-                    }
-                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Uri> task) {
-                        if (task.isSuccessful()) {
-                            Uri downloadUrl = task.getResult();
-                            downloadImageUrl = String.valueOf(downloadUrl);
-                            user.setImage(downloadImageUrl);
-                            loadDataIntoDB(user.getNumber(), user.getUsername(), user.getPassword(), user.getImage(), user.getTg(), user.getFb(), false);
-                        }
-                    }
-                });
+        }).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Uri downloadUrl = task.getResult();
+                downloadImageUrl = String.valueOf(downloadUrl);
+                user.setImage(downloadImageUrl);
+                loadDataIntoDB(user.getNumber(), user.getUsername(), user.getPassword(), user.getImage(), user.getTg(), user.getFb(), false);
             }
-        });
+        }));
     }
 
     private void getUser(Bundle savedInstanceState)
@@ -250,7 +214,7 @@ public class ProfileSettingsFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (savedInstanceState == null) {
-                    Bundle extras = getActivity().getIntent().getExtras();
+                    @SuppressLint("UseRequireInsteadOfGet") Bundle extras = Objects.requireNonNull(getActivity()).getIntent().getExtras();
                     if (extras == null) {
                         numberId[0] = null;
                     } else {
@@ -260,6 +224,7 @@ public class ProfileSettingsFragment extends Fragment {
                     numberId[0] = (String) savedInstanceState.getSerializable("number");
                 }
                 usersData[0] = snapshot.child(parentDBName).child(numberId[0]).getValue(Users.class);
+                assert usersData[0] != null;
                 setData(usersData[0].getUsername(), usersData[0].getNumber(), usersData[0].getImage(), usersData[0].getTg(), usersData[0].getFb());
                 user.setUsername(usersData[0].getUsername());
                 user.setNumber(usersData[0].getNumber());
@@ -276,6 +241,7 @@ public class ProfileSettingsFragment extends Fragment {
         });
     }
 
+    @SuppressLint("SetTextI18n")
     private void setData(String name, String number, String imageLink, String telegram, String facebook)
     {
         nameEditText.setText(name);
@@ -290,14 +256,14 @@ public class ProfileSettingsFragment extends Fragment {
         Pattern tgPattern = Pattern.compile("^([a-zA-Z]|[0-9]|_){5}([a-zA-Z]|[0-9]|_)*");
         Pattern fbPattern = Pattern.compile("^([a-zA-Z]|[0-9]|\\.){5}([a-zA-Z]|[0-9]|\\.)*");
         isNameValid = (nameEditText.getText().toString().length() > 0);
-        if(telegramEditText.getText().toString()==null||telegramEditText.getText().toString().equals(""))
+        if(telegramEditText.getText().toString().equals(""))
         {
             isTgValid = true;
         }
         else {
             isTgValid = (tgPattern.matcher(telegramEditText.getText().toString()).matches()||telegramEditText.getText().toString().equals(""));
         }
-        if(facebookEditText.getText().toString()==null||facebookEditText.getText().toString().equals(""))
+        if(facebookEditText.getText().toString().equals(""))
         {
             isFbValid = true;
         }
@@ -309,11 +275,10 @@ public class ProfileSettingsFragment extends Fragment {
 
     private boolean isPasswordInfoValid()
     {
-        isPasswordValid = ((newPasswordEditText.getText().toString().equals(confirmNewPasswordEditText.getText().toString())) && (!newPasswordEditText.getText().toString().equals("")) && newPasswordEditText.getText().toString().length()>=5);
-        return(isPasswordValid);
+        return(((newPasswordEditText.getText().toString().equals(confirmNewPasswordEditText.getText().toString())) && (!newPasswordEditText.getText().toString().equals("")) && newPasswordEditText.getText().toString().length() >= 5));
     }
 
-    private void loadDataIntoDB(String phoneNumber, String username, String pssw, String profileImg, String telegram, String facebook, boolean changeFragment)
+    private void loadDataIntoDB(String phoneNumber, String username, String pass, String profileImg, String telegram, String facebook, boolean changeFragment)
     {
         final DatabaseReference RootRef;
         RootRef = FirebaseDatabase.getInstance("https://book-exchange-4777a-default-rtdb.europe-west1.firebasedatabase.app").getReference();
@@ -324,7 +289,7 @@ public class ProfileSettingsFragment extends Fragment {
                 HashMap<String, Object> userDataMap = new HashMap<>();
                 userDataMap.put("number", phoneNumber);
                 userDataMap.put("username", username);
-                userDataMap.put("password", pssw);
+                userDataMap.put("password", pass);
                 userDataMap.put("image", profileImg);
                 if(telegram != null && !telegram.equals(""))
                     userDataMap.put("tg", telegram);
@@ -339,6 +304,7 @@ public class ProfileSettingsFragment extends Fragment {
                         {
                             try {
                                 Fragment newFragment = new ProfileFragment();
+                                assert getFragmentManager() != null;
                                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                                 Thread.sleep(100);
 
@@ -377,10 +343,10 @@ public class ProfileSettingsFragment extends Fragment {
         errorMessage.setText("");
     }
 
-    private void startLoadingBar(String message, String description)
+    private void startLoadingBar()
     {
-        loadingBar.setTitle(message);
-        loadingBar.setMessage(description);
+        loadingBar.setTitle("Changing info...");
+        loadingBar.setMessage("Please, wait a few seconds");
         loadingBar.setCanceledOnTouchOutside(false);
         loadingBar.show();
     }

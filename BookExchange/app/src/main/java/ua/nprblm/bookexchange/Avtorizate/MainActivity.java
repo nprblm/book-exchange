@@ -1,5 +1,6 @@
 package ua.nprblm.bookexchange.Avtorizate;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -26,7 +27,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import ua.nprblm.bookexchange.R;
 import ua.nprblm.bookexchange.UI.HomeActivity;
-import ua.nprblm.bookexchange.Users;
+import ua.nprblm.bookexchange.Models.Users;
 
 public class MainActivity extends AppCompatActivity {
     private Button loginButton;
@@ -46,8 +47,6 @@ public class MainActivity extends AppCompatActivity {
 
     private ProgressDialog loadingBar;
 
-    private final String parentDBName = "Users";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -55,6 +54,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         init();
+        loadingBar = new ProgressDialog(this);
+
+        SharedPreferences loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
+        loginPrefsEditor = loginPreferences.edit();
+
+        boolean saveLogin = loginPreferences.getBoolean("saveLogin", false);
+        if (saveLogin) {
+            numberEditText.setText(loginPreferences.getString("number", ""));
+            passwordEditText.setText(loginPreferences.getString("password", ""));
+            saveLoginCheckBox.setChecked(true);
+        }
 
         numberEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -71,18 +81,6 @@ public class MainActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
             }
         });
-
-        SharedPreferences loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
-        loginPrefsEditor = loginPreferences.edit();
-
-        boolean saveLogin = loginPreferences.getBoolean("saveLogin", false);
-        if (saveLogin) {
-            numberEditText.setText(loginPreferences.getString("number", ""));
-            passwordEditText.setText(loginPreferences.getString("password", ""));
-            saveLoginCheckBox.setChecked(true);
-        }
-
-        loadingBar = new ProgressDialog(this);
 
         loginButton.setOnClickListener(v -> loginUser());
 
@@ -113,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
             String number = numberEditText.getText().toString();
             String password = passwordEditText.getText().toString();
 
-            loadingBar.setTitle("Loging in...");
+            loadingBar.setTitle("Authorisation...");
             loadingBar.setMessage("Please, wait a few seconds");
             loadingBar.setCanceledOnTouchOutside(false);
             loadingBar.show();
@@ -128,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
             if(!isNumberValid) messageError+="Number is not valid\n";
             if(!isPasswordValid) messageError+="Password is not valid\n";
 
-            setErrorMessage(messageError);
+            errorMessage.setText(messageError);
         }
     }
 
@@ -137,11 +135,12 @@ public class MainActivity extends AppCompatActivity {
         RootRef = FirebaseDatabase.getInstance("https://book-exchange-4777a-default-rtdb.europe-west1.firebasedatabase.app").getReference();
 
         RootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.child(parentDBName).child(number).exists())
+                if(snapshot.child("Users").child(number).exists())
                 {
-                    Users usersData = snapshot.child(parentDBName).child(number).getValue(Users.class);
+                    Users usersData = snapshot.child("Users").child(number).getValue(Users.class);
 
                     assert usersData != null;
                     if((usersData.getNumber().equals(number))&&(usersData.getPassword().equals(password)))
@@ -159,14 +158,14 @@ public class MainActivity extends AppCompatActivity {
                     {
                         loadingBar.dismiss();
                         Toast.makeText(MainActivity.this, "You enter wrong login or password", Toast.LENGTH_SHORT).show();
-                        setErrorMessage("You enter wrong login or password\n");
+                        errorMessage.setText("You enter wrong login or password\n");
                     }
                 }
                 else
                 {
                     loadingBar.dismiss();
                     Toast.makeText(MainActivity.this, " Error You enter wrong login or password\n", Toast.LENGTH_SHORT).show();
-                    setErrorMessage("You enter wrong login or password");
+                    errorMessage.setText("You enter wrong login or password");
                 }
             }
 
@@ -184,19 +183,12 @@ public class MainActivity extends AppCompatActivity {
         return((isNumberValid) && (isPasswordValid));
     }
 
-    private void setErrorMessage(String message)
-    {
-        errorMessage.setText(message);
-    }
-
     private void init() {
         loginButton = findViewById(R.id.login_button);
         registerButton = findViewById(R.id.register_button);
-
         numberEditText = findViewById(R.id.number_edit_text);
         passwordEditText = findViewById(R.id.password_edit_text);
         errorMessage = findViewById(R.id.error_mesage);
-
         saveLoginCheckBox = findViewById(R.id.save_login_check_box);
     }
 }

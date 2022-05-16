@@ -1,5 +1,6 @@
-package ua.nprblm.bookexchange.UI.home;
+package ua.nprblm.bookexchange.UI.home.Item;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -20,11 +21,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -37,9 +33,10 @@ import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Objects;
 
-import ua.nprblm.bookexchange.Cities;
-import ua.nprblm.bookexchange.Products;
+import ua.nprblm.bookexchange.Models.Cities;
+import ua.nprblm.bookexchange.Models.Products;
 import ua.nprblm.bookexchange.R;
 
 public class ItemSettingsActivity extends AppCompatActivity {
@@ -64,15 +61,11 @@ public class ItemSettingsActivity extends AppCompatActivity {
     private boolean isNameValid = false;
     private boolean isDescriptionValid = false;
     private boolean isCityValid = false;
-    private final boolean isImageValid = false;
 
-    private String name;
-    private String description;
-    private String city;
     String id;
     String phoneNumber;
 
-    private Products thisProduct = new Products();
+    private final Products thisProduct = new Products();
 
     private DatabaseReference productsRef;
 
@@ -105,6 +98,7 @@ public class ItemSettingsActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 product[0] = snapshot.child("Products").child(id).getValue(Products.class);
+                assert product[0] != null;
                 setData(product[0].getName(), product[0].getDescription(), product[0].getCity(), product[0].getImage());
                 thisProduct.setTime(product[0].getTime());
                 thisProduct.setDate(product[0].getDate());
@@ -128,44 +122,36 @@ public class ItemSettingsActivity extends AppCompatActivity {
         cityChange.setThreshold(1);
         cityChange.setAdapter(adapter);
 
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(isDataValid()) {
-                    loadingBar.setTitle("Uploading product...");
-                    loadingBar.setMessage("Please, wait a few seconds");
-                    loadingBar.setCanceledOnTouchOutside(false);
-                    loadingBar.show();
+        addButton.setOnClickListener(v -> {
+            if(isDataValid()) {
+                loadingBar.setTitle("Uploading product...");
+                loadingBar.setMessage("Please, wait a few seconds");
+                loadingBar.setCanceledOnTouchOutside(false);
+                loadingBar.show();
 
-                    thisProduct.setName(nameEditText.getText().toString());
-                    thisProduct.setDescription(descriptionEditText.getText().toString());
-                    thisProduct.setCity(cityChange.getText().toString());
+                thisProduct.setName(nameEditText.getText().toString());
+                thisProduct.setDescription(descriptionEditText.getText().toString());
+                thisProduct.setCity(cityChange.getText().toString());
 
-                    errorMessage.setText("");
-                    if (imageUri != null) {
-                        downloadImage(thisProduct.getId());
-                    } else {
-                        uploadData(thisProduct.getId(), thisProduct.getDate(), thisProduct.getTime(), thisProduct.getName(), thisProduct.getDescription(), thisProduct.getCity(), thisProduct.getImage(), thisProduct.getNumber());
-                    }
+                errorMessage.setText("");
+                if (imageUri != null) {
+                    downloadImage(thisProduct.getId());
+                } else {
+                    uploadData(thisProduct.getId(), thisProduct.getDate(), thisProduct.getTime(), thisProduct.getName(), thisProduct.getDescription(), thisProduct.getCity(), thisProduct.getImage(), thisProduct.getNumber());
                 }
-                else
-                {
-                    String messageError = "";
-                    if(!isNameValid) messageError+="Name must have 4 or more characters\n";
-                    if(!isDescriptionValid) messageError+="Description must have 10 or more characters\n";
-                    if(!isCityValid) messageError+="Dont have this city in database\n";
+            }
+            else
+            {
+                String messageError = "";
+                if(!isNameValid) messageError+="Name must have 4 or more characters\n";
+                if(!isDescriptionValid) messageError+="Description must have 10 or more characters\n";
+                if(!isCityValid) messageError+="Don`t have this city in database\n";
 
-                    errorMessage.setText(messageError);
-                }
+                errorMessage.setText(messageError);
             }
         });
 
-        addPictureButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openGallery();
-            }
-        });
+        addPictureButton.setOnClickListener(v -> openGallery());
     }
 
     private void openGallery() {
@@ -175,6 +161,7 @@ public class ItemSettingsActivity extends AppCompatActivity {
         startActivityForResult(galleryIntent,GALLERY_PICK);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -190,23 +177,21 @@ public class ItemSettingsActivity extends AppCompatActivity {
 
     private boolean isDataValid()
     {
-        name = nameEditText.getText().toString();
-        description = descriptionEditText.getText().toString();
+        String name = nameEditText.getText().toString();
+        String description = descriptionEditText.getText().toString();
 
-        isNameValid = (name.length()>3?true:false);
-        isDescriptionValid = (description.length()>9?true:false);
+        isNameValid = (name.length() > 3);
+        isDescriptionValid = (description.length() > 9);
         isCityValid = searchInArray(cityChange.getText().toString());
-        return((isNameValid)&&(isDescriptionValid)&&(isCityValid)?true:false);
+        return((isNameValid) && (isDescriptionValid) && (isCityValid));
     }
 
     private boolean searchInArray(String city)
     {
         String[] array = Cities.getList();
-        for(int i = 0 ;i< array.length;i++)
-        {
-            if(city.toLowerCase(Locale.ROOT).equals(array[i].toLowerCase(Locale.ROOT)))
-            {
-                city = cityChange.getText().toString().substring(0,1).toUpperCase(Locale.ROOT)+cityChange.getText().toString().substring(1).toLowerCase(Locale.ROOT);
+        for (String s : array) {
+            if (city.toLowerCase(Locale.ROOT).equals(s.toLowerCase(Locale.ROOT))) {
+                city = cityChange.getText().toString().substring(0, 1).toUpperCase(Locale.ROOT) + cityChange.getText().toString().substring(1).toLowerCase(Locale.ROOT);
                 setCity(city);
                 return true;
             }
@@ -215,7 +200,7 @@ public class ItemSettingsActivity extends AppCompatActivity {
     }
 
     private void setCity(String city) {
-        this.city = city;
+        cityChange.setText(city);
     }
 
     private void downloadImage(String uID)
@@ -228,41 +213,27 @@ public class ItemSettingsActivity extends AppCompatActivity {
         StorageReference filePath = imageRef.child(uID + ".jpeg");
         final UploadTask uploadTask = filePath.putFile(imageUri);
 
-        uploadTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                String message = e.toString();
-                Toast.makeText(ItemSettingsActivity.this, message, Toast.LENGTH_SHORT).show();
+        uploadTask.addOnFailureListener(e -> {
+            String message = e.toString();
+            Toast.makeText(ItemSettingsActivity.this, message, Toast.LENGTH_SHORT).show();
+            loadingBar.dismiss();
+        }).addOnSuccessListener(taskSnapshot -> uploadTask.continueWithTask(task -> {
+            if (!task.isSuccessful()) {
+                throw Objects.requireNonNull(task.getException());
+            } else {
+                downloadImageUrl = filePath.getDownloadUrl().toString();
+                return filePath.getDownloadUrl();
+            }
+        }).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Uri downloadUrl = task.getResult();
+                downloadImageUrl = String.valueOf(downloadUrl);
+                System.out.println(downloadImageUrl);
+                thisProduct.setImage(downloadImageUrl);
                 loadingBar.dismiss();
+                uploadData(thisProduct.getId(), thisProduct.getDate(), thisProduct.getTime(), thisProduct.getName(), thisProduct.getDescription(), thisProduct.getCity(), thisProduct.getImage(), thisProduct.getNumber());
             }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Task<Uri> uriTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                    @Override
-                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                        if (!task.isSuccessful()) {
-                            throw task.getException();
-                        } else {
-                            downloadImageUrl =filePath.getDownloadUrl().toString();
-                            return filePath.getDownloadUrl();
-                        }
-                    }
-                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Uri> task) {
-                        if (task.isSuccessful()) {
-                            Uri downloadUrl = task.getResult();
-                            downloadImageUrl = String.valueOf(downloadUrl);
-                            System.out.println(downloadImageUrl);
-                            thisProduct.setImage(downloadImageUrl);
-                            loadingBar.dismiss();
-                            uploadData(thisProduct.getId(), thisProduct.getDate(), thisProduct.getTime(), thisProduct.getName(), thisProduct.getDescription(), thisProduct.getCity(), thisProduct.getImage(), thisProduct.getNumber());
-                        }
-                    }
-                });
-            }
-        });
+        }));
     }
 
     private void uploadData(String productId, String date, String time, String username, String desc, String citySet, String imageLink, String number)
@@ -278,30 +249,25 @@ public class ItemSettingsActivity extends AppCompatActivity {
         productMap.put("image", imageLink);
         productMap.put("number", number);
 
-        productsRef.child(id).updateChildren(productMap).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if(task.isSuccessful())
-                {
-                    Toast.makeText(ItemSettingsActivity.this, "Product uploading is successful", Toast.LENGTH_SHORT).show();
-                    loadingBar.dismiss();
-                    hideKeyboard(ItemSettingsActivity.this);
-                }
-                else
-                {
-                    Toast.makeText(ItemSettingsActivity.this, "Product uploading is fail", Toast.LENGTH_SHORT).show();
-                    loadingBar.dismiss();
-                }
-
+        productsRef.child(id).updateChildren(productMap).addOnCompleteListener(task -> {
+            if(task.isSuccessful())
+            {
+                Toast.makeText(ItemSettingsActivity.this, "Product uploading is successful", Toast.LENGTH_SHORT).show();
+                loadingBar.dismiss();
+                hideKeyboard(ItemSettingsActivity.this);
             }
+            else
+            {
+                Toast.makeText(ItemSettingsActivity.this, "Product uploading is fail", Toast.LENGTH_SHORT).show();
+                loadingBar.dismiss();
+            }
+
         });
     }
 
     public static void hideKeyboard(Activity activity) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        //Find the currently focused view, so we can grab the correct window token from it.
         View view = activity.getCurrentFocus();
-        //If no view currently has focus, create a new one, just so we can grab a window token from it
         if (view == null) {
             view = new View(activity);
         }

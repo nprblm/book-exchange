@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -25,9 +24,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import ua.nprblm.bookexchange.Avtorizate.MainActivity;
+import ua.nprblm.bookexchange.Models.Users;
 import ua.nprblm.bookexchange.R;
 import ua.nprblm.bookexchange.UI.profile.settings.ProfileSettingsFragment;
-import ua.nprblm.bookexchange.Users;
 import ua.nprblm.bookexchange.databinding.FragmentProfileBinding;
 
 
@@ -35,7 +34,6 @@ public class ProfileFragment extends Fragment {
 
     private final String parentDBName = "Users";
 
-    private ProfileViewModel profileViewModel;
     private FragmentProfileBinding binding;
 
     private TextView nameTextView;
@@ -51,13 +49,10 @@ public class ProfileFragment extends Fragment {
     private Button settingsButton;
     private Button signOutButton;
 
-    private final FragmentManager fm = getFragmentManager();
-
     @SuppressLint("ResourceType")
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        profileViewModel =
-                new ViewModelProvider(this).get(ProfileViewModel.class);
+        new ViewModelProvider(this).get(ProfileViewModel.class);
 
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -65,29 +60,24 @@ public class ProfileFragment extends Fragment {
         init(root);
         getData(savedInstanceState);
 
-        settingsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        settingsButton.setOnClickListener(v -> {
 
-                Fragment newFragment = new ProfileSettingsFragment();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            Fragment newFragment = new ProfileSettingsFragment();
+            assert getFragmentManager() != null;
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
-                transaction.replace(R.id.fragment_profile, newFragment);
-                transaction.addToBackStack(null);
+            transaction.replace(R.id.fragment_profile, newFragment);
+            transaction.addToBackStack(null);
 
-                transaction.commit();
-            }
+            transaction.commit();
         });
 
-        signOutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent mainIntent = new Intent(getContext(), MainActivity.class);
-                mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                mainIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                startActivity(mainIntent);
-            }
+        signOutButton.setOnClickListener(v -> {
+            Intent mainIntent = new Intent(getContext(), MainActivity.class);
+            mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            mainIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(mainIntent);
         });
 
         return root;
@@ -112,7 +102,7 @@ public class ProfileFragment extends Fragment {
             {
                 if (savedInstanceState == null)
                 {
-                    Bundle extras = getActivity().getIntent().getExtras();
+                    Bundle extras = requireActivity().getIntent().getExtras();
                     if (extras == null)
                     {
                         number[0] = null;
@@ -126,6 +116,7 @@ public class ProfileFragment extends Fragment {
                     number[0] = (String) savedInstanceState.getSerializable("number");
                 }
                 Users usersData = snapshot.child(parentDBName).child(number[0]).getValue(Users.class);
+                assert usersData != null;
                 if(usersData.getTg()==null)
                 {
                     tgLayout.setVisibility(View.GONE);
@@ -145,6 +136,7 @@ public class ProfileFragment extends Fragment {
         });
     }
 
+    @SuppressLint("SetTextI18n")
     private void setData(String name, String number, String profileAvatar, String telegram, String facebook)
     {
         nameTextView.setText(name);
