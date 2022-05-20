@@ -29,7 +29,7 @@ import ua.nprblm.bookexchange.R;
 import ua.nprblm.bookexchange.UI.HomeActivity;
 import ua.nprblm.bookexchange.Models.Users;
 
-public class MainActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
     private Button loginButton;
     private Button registerButton;
 
@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
         loginButton.setOnClickListener(v -> loginUser());
 
         registerButton.setOnClickListener(v -> {
-            Intent registerIntent = new Intent(MainActivity.this, RegisterActivity.class);
+            Intent registerIntent = new Intent(LoginActivity.this, RegisterActivity.class);
             startActivity(registerIntent);
         });
     }
@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
                     {
                         loadingBar.dismiss();
 
-                        Intent homeIntent = new Intent(MainActivity.this, HomeActivity.class);
+                        Intent homeIntent = new Intent(LoginActivity.this, HomeActivity.class);
                         homeIntent.putExtra("number", number);
                         homeIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -157,14 +157,14 @@ public class MainActivity extends AppCompatActivity {
                     else
                     {
                         loadingBar.dismiss();
-                        Toast.makeText(MainActivity.this, "You enter wrong login or password", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "You enter wrong login or password", Toast.LENGTH_SHORT).show();
                         errorMessage.setText("You enter wrong login or password\n");
                     }
                 }
                 else
                 {
                     loadingBar.dismiss();
-                    Toast.makeText(MainActivity.this, " Error You enter wrong login or password\n", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, " Error You enter wrong login or password\n", Toast.LENGTH_SHORT).show();
                     errorMessage.setText("You enter wrong login or password");
                 }
             }

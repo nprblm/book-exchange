@@ -23,7 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
-import ua.nprblm.bookexchange.Avtorizate.MainActivity;
+import ua.nprblm.bookexchange.Avtorizate.LoginActivity;
 import ua.nprblm.bookexchange.Models.Users;
 import ua.nprblm.bookexchange.R;
 import ua.nprblm.bookexchange.UI.profile.settings.ProfileSettingsFragment;
@@ -73,7 +73,7 @@ public class ProfileFragment extends Fragment {
         });
 
         signOutButton.setOnClickListener(v -> {
-            Intent mainIntent = new Intent(getContext(), MainActivity.class);
+            Intent mainIntent = new Intent(getContext(), LoginActivity.class);
             mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             mainIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);

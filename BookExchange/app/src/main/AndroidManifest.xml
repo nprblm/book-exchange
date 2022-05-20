@@ -26,7 +26,7 @@
             android:name=".Avtorizate.RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".Avtorizate.MainActivity"
+            android:name=".Avtorizate.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
