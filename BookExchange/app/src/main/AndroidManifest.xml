@@ -10,23 +10,23 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BookExchange">
         <activity
-            android:name=".UI.home.Item.ItemSettingsActivity"
+            android:name=".ui.home.item.ItemSettingsActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustPan"/>
         <activity
-            android:name=".UI.home.Item.ItemActivity"
+            android:name=".ui.home.item.ItemActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustPan"/>
         <activity
-            android:name=".UI.HomeActivity"
+            android:name=".ui.HomeActivity"
             android:exported="false"
             android:label="@string/title_activity_home"
             android:windowSoftInputMode="adjustPan"/>
         <activity
-            android:name=".Avtorizate.RegisterActivity"
+            android:name=".authorization.RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".Avtorizate.LoginActivity"
+            android:name=".authorization.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -1,4 +1,4 @@
-package ua.nprblm.bookexchange.Avtorizate;
+package ua.nprblm.bookexchange.authorization;
 
 import android.app.ProgressDialog;
 import android.content.ContentResolver;

@@ -1,4 +1,4 @@
-package ua.nprblm.bookexchange.UI.home;
+package ua.nprblm.bookexchange.ui.home;
 
 import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
@@ -14,7 +14,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-import ua.nprblm.bookexchange.Models.Products;
+import ua.nprblm.bookexchange.models.Products;
 import ua.nprblm.bookexchange.R;
 
 class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {

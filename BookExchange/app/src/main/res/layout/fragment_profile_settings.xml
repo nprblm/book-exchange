@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UI.profile.settings.ProfileSettingsFragment"
+    tools:context=".ui.profile.ProfileSettingsFragment"
     android:background="@color/dark_grey"
     app:layout_constraintTop_toTopOf="parent"
     android:id="@+id/fragment_profile_settings">

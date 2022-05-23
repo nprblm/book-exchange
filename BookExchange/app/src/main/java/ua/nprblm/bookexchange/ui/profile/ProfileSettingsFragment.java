@@ -1,4 +1,4 @@
-package ua.nprblm.bookexchange.UI.profile.settings;
+package ua.nprblm.bookexchange.ui.profile;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
@@ -35,9 +35,8 @@ import java.util.HashMap;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-import ua.nprblm.bookexchange.Models.Users;
+import ua.nprblm.bookexchange.models.Users;
 import ua.nprblm.bookexchange.R;
-import ua.nprblm.bookexchange.UI.profile.ProfileFragment;
 import ua.nprblm.bookexchange.databinding.FragmentProfileSettingsBinding;
 
 public class ProfileSettingsFragment extends Fragment {

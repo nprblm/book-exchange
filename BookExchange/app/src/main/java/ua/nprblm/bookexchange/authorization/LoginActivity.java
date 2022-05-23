@@ -1,4 +1,4 @@
-package ua.nprblm.bookexchange.Avtorizate;
+package ua.nprblm.bookexchange.authorization;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
@@ -26,8 +26,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import ua.nprblm.bookexchange.R;
-import ua.nprblm.bookexchange.UI.HomeActivity;
-import ua.nprblm.bookexchange.Models.Users;
+import ua.nprblm.bookexchange.ui.HomeActivity;
+import ua.nprblm.bookexchange.models.Users;
 
 public class LoginActivity extends AppCompatActivity {
     private Button loginButton;

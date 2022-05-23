@@ -1,4 +1,4 @@
-package ua.nprblm.bookexchange.UI.home.Item;
+package ua.nprblm.bookexchange.ui.home.item;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -35,8 +35,8 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Objects;
 
-import ua.nprblm.bookexchange.Models.Cities;
-import ua.nprblm.bookexchange.Models.Products;
+import ua.nprblm.bookexchange.models.Cities;
+import ua.nprblm.bookexchange.models.Products;
 import ua.nprblm.bookexchange.R;
 
 public class ItemSettingsActivity extends AppCompatActivity {

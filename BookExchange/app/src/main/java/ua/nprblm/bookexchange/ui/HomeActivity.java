@@ -1,4 +1,4 @@
-package ua.nprblm.bookexchange.UI;
+package ua.nprblm.bookexchange.ui;
 
 import android.os.Bundle;
 import android.widget.Toast;
@@ -12,7 +12,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import ua.nprblm.bookexchange.Models.Users;
+import ua.nprblm.bookexchange.models.Users;
 import ua.nprblm.bookexchange.R;
 import ua.nprblm.bookexchange.databinding.ActivityHomeBinding;
 

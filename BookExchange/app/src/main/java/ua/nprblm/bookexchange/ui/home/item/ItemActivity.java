@@ -1,4 +1,4 @@
-package ua.nprblm.bookexchange.UI.home.Item;
+package ua.nprblm.bookexchange.ui.home.item;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
@@ -24,9 +24,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
-import ua.nprblm.bookexchange.Models.Products;
+import ua.nprblm.bookexchange.models.Products;
 import ua.nprblm.bookexchange.R;
-import ua.nprblm.bookexchange.Models.Users;
+import ua.nprblm.bookexchange.models.Users;
 
 public class ItemActivity extends AppCompatActivity {
     private final String parentDBName = "Products";

@@ -1,4 +1,4 @@
-package ua.nprblm.bookexchange.UI.profile;
+package ua.nprblm.bookexchange.ui.profile;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -22,10 +22,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
-import ua.nprblm.bookexchange.Avtorizate.LoginActivity;
-import ua.nprblm.bookexchange.Models.Users;
+import ua.nprblm.bookexchange.authorization.LoginActivity;
+import ua.nprblm.bookexchange.models.Users;
 import ua.nprblm.bookexchange.R;
-import ua.nprblm.bookexchange.UI.profile.settings.ProfileSettingsFragment;
 import ua.nprblm.bookexchange.databinding.FragmentProfileBinding;
 
 

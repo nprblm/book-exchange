@@ -1,4 +1,4 @@
-package ua.nprblm.bookexchange.Models;
+package ua.nprblm.bookexchange.models;
 
 public class Users {
     private String username;

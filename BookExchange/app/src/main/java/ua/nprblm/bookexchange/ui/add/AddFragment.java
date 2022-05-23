@@ -1,4 +1,4 @@
-package ua.nprblm.bookexchange.UI.add;
+package ua.nprblm.bookexchange.ui.add;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -35,7 +35,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Objects;
 
-import ua.nprblm.bookexchange.Models.Cities;
+import ua.nprblm.bookexchange.models.Cities;
 import ua.nprblm.bookexchange.R;
 import ua.nprblm.bookexchange.databinding.FragmentAddBinding;
 

@@ -7,17 +7,17 @@
 
     <fragment
         android:id="@+id/navigation_profile"
-        android:name="ua.nprblm.bookexchange.UI.profile.ProfileFragment"
+        android:name="ua.nprblm.bookexchange.ui.profile.ProfileFragment"
         android:label="Profile"
         tools:layout="@layout/fragment_profile" />
     <fragment
         android:id="@+id/navigation_add"
-        android:name="ua.nprblm.bookexchange.UI.add.AddFragment"
+        android:name="ua.nprblm.bookexchange.ui.add.AddFragment"
         android:label="Add"
         tools:layout="@layout/fragment_add" />
     <fragment
         android:id="@+id/navigation_home"
-        android:name="ua.nprblm.bookexchange.UI.home.HomeFragment"
+        android:name="ua.nprblm.bookexchange.ui.home.HomeFragment"
         android:label="Home"
         tools:layout="@layout/fragment_home" />
 

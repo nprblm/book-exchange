@@ -1,4 +1,4 @@
-package ua.nprblm.bookexchange.UI.home;
+package ua.nprblm.bookexchange.ui.home;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -30,10 +30,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Locale;
 
-import ua.nprblm.bookexchange.Models.Cities;
-import ua.nprblm.bookexchange.Models.Products;
+import ua.nprblm.bookexchange.models.Cities;
+import ua.nprblm.bookexchange.models.Products;
 import ua.nprblm.bookexchange.R;
-import ua.nprblm.bookexchange.UI.home.Item.ItemActivity;
+import ua.nprblm.bookexchange.ui.home.item.ItemActivity;
 import ua.nprblm.bookexchange.databinding.FragmentHomeBinding;
 
 public class HomeFragment extends Fragment implements HomeAdapter.OnProductClickListener {
