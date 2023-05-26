@@ -1,2 +1,3 @@
 # book-exchange
-Online market for book change
+Android App with Firebase connection.
+Online market for book change, with registration and authorization.
